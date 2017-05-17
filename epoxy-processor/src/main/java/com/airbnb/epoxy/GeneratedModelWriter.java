@@ -25,24 +25,21 @@ import java.util.List;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_CONTROLLER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_VIEW_HOLDER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.GENERATED_MODEL_INTERFACE;
-import static com.airbnb.epoxy.ProcessorUtils.MODEL_CLICK_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.ON_BIND_MODEL_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.ON_UNBIND_MODEL_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.UNTYPED_EPOXY_MODEL_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.WRAPPED_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.getClassName;
-import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
-import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
-import static com.airbnb.epoxy.ProcessorUtils.isDataBindingModel;
-import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
-import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModelWithHolder;
+import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
+import static com.airbnb.epoxy.Utils.EPOXY_VIEW_HOLDER_TYPE;
+import static com.airbnb.epoxy.Utils.GENERATED_MODEL_INTERFACE;
+import static com.airbnb.epoxy.Utils.MODEL_CLICK_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.ON_BIND_MODEL_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.ON_UNBIND_MODEL_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.WRAPPED_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.getClassName;
+import static com.airbnb.epoxy.Utils.implementsMethod;
+import static com.airbnb.epoxy.Utils.isDataBindingModel;
+import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.isEpoxyModelWithHolder;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -66,34 +63,40 @@ class GeneratedModelWriter {
 
   private final Filer filer;
   private final Types typeUtils;
-  private final Elements elementUtils;
   private final ErrorLogger errorLogger;
   private final LayoutResourceProcessor layoutResourceProcessor;
   private final ConfigManager configManager;
   private final DataBindingModuleLookup dataBindingModuleLookup;
 
-  GeneratedModelWriter(Filer filer, Types typeUtils, Elements elementUtils, ErrorLogger errorLogger,
+  interface BeforeBuildCallback {
+    void modifyBuilder(TypeSpec.Builder builder);
+  }
+
+  GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
       LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager,
       DataBindingModuleLookup dataBindingModuleLookup) {
     this.filer = filer;
     this.typeUtils = typeUtils;
-    this.elementUtils = elementUtils;
     this.errorLogger = errorLogger;
     this.layoutResourceProcessor = layoutResourceProcessor;
     this.configManager = configManager;
     this.dataBindingModuleLookup = dataBindingModuleLookup;
   }
 
-  void generateClassForModel(ClassToGenerateInfo info)
+  void generateClassForModel(GeneratedModelInfo info) throws IOException {
+    generateClassForModel(info, null);
+  }
+
+  void generateClassForModel(GeneratedModelInfo info, BeforeBuildCallback beforeBuildCallback)
       throws IOException {
-    if (!info.shouldGenerateSubClass()) {
+    if (!info.shouldGenerateModel()) {
       return;
     }
 
     TypeSpec.Builder builder = TypeSpec.classBuilder(info.getGeneratedName())
         .addJavadoc("Generated file. Do not modify!")
         .addModifiers(PUBLIC)
-        .superclass(info.getOriginalClassName())
+        .superclass(info.getSuperClassName())
         .addSuperinterface(getGeneratedModelInterface(info))
         .addTypeVariables(info.getTypeVariables())
         .addFields(generateFields(info))
@@ -112,27 +115,31 @@ class GeneratedModelWriter {
         .addMethod(generateHashCode(info))
         .addMethod(generateToString(info));
 
+    if (beforeBuildCallback != null) {
+      beforeBuildCallback.modifyBuilder(builder);
+    }
+
     JavaFile.builder(info.getGeneratedName().packageName(), builder.build())
         .build()
         .writeTo(filer);
   }
 
   @NonNull
-  private ParameterizedTypeName getGeneratedModelInterface(ClassToGenerateInfo info) {
+  private ParameterizedTypeName getGeneratedModelInterface(GeneratedModelInfo info) {
     return ParameterizedTypeName.get(
         getClassName(GENERATED_MODEL_INTERFACE),
-        TypeName.get(info.getModelType())
+        info.getModelType()
     );
   }
 
-  private Iterable<FieldSpec> generateFields(ClassToGenerateInfo classInfo) {
+  private Iterable<FieldSpec> generateFields(GeneratedModelInfo classInfo) {
     List<FieldSpec> fields = new ArrayList<>();
 
     // Add fields for the bind/unbind listeners
     ParameterizedTypeName onBindListenerType = ParameterizedTypeName.get(
         getClassName(ON_BIND_MODEL_LISTENER_TYPE),
         classInfo.getParameterizedGeneratedName(),
-        TypeName.get(classInfo.getModelType())
+        classInfo.getModelType()
     );
     fields
         .add(FieldSpec.builder(onBindListenerType, modelBindListenerFieldName(), PRIVATE).build());
@@ -140,24 +147,32 @@ class GeneratedModelWriter {
     ParameterizedTypeName onUnbindListenerType = ParameterizedTypeName.get(
         getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
         classInfo.getParameterizedGeneratedName(),
-        TypeName.get(classInfo.getModelType())
+        classInfo.getModelType()
     );
     fields.add(
         FieldSpec.builder(onUnbindListenerType, modelUnbindListenerFieldName(), PRIVATE).build());
 
     for (AttributeInfo attributeInfo : classInfo.getAttributeInfo()) {
-      if (!attributeInfo.isViewClickListener()) {
-        continue;
+      if (attributeInfo.isGenerated) {
+        fields.add(FieldSpec.builder(
+            attributeInfo.getTypeName(),
+            attributeInfo.name,
+            PRIVATE
+            ).build()
+        );
       }
 
-      // Create our own field to store a model click listener. We will later wrap the model click
-      // listener in a view click listener to set on the original model's View.OnClickListener field
-      fields.add(FieldSpec.builder(
-          getModelClickListenerType(classInfo),
-          attributeInfo.getModelClickListenerName(),
-          PRIVATE
-          ).build()
-      );
+      if (attributeInfo.isViewClickListener()) {
+        // Create our own field to store a model click listener. We will later wrap the model click
+        // listener in a view click listener to set on the original model's View.OnClickListener
+        // field
+        fields.add(FieldSpec.builder(
+            getModelClickListenerType(classInfo),
+            attributeInfo.getModelClickListenerName(),
+            PRIVATE
+            ).build()
+        );
+      }
     }
 
     return fields;
@@ -173,18 +188,18 @@ class GeneratedModelWriter {
     return "onModelBoundListener" + GENERATED_FIELD_SUFFIX;
   }
 
-  private static ParameterizedTypeName getModelClickListenerType(ClassToGenerateInfo classInfo) {
+  private ParameterizedTypeName getModelClickListenerType(GeneratedModelInfo classInfo) {
     return ParameterizedTypeName.get(
         getClassName(MODEL_CLICK_LISTENER_TYPE),
         classInfo.getParameterizedGeneratedName(),
-        TypeName.get(classInfo.getModelType()));
+        classInfo.getModelType());
   }
 
   /** Include any constructors that are in the super class. */
-  private Iterable<MethodSpec> generateConstructors(ClassToGenerateInfo info) {
+  private Iterable<MethodSpec> generateConstructors(GeneratedModelInfo info) {
     List<MethodSpec> constructors = new ArrayList<>(info.getConstructors().size());
 
-    for (ClassToGenerateInfo.ConstructorInfo constructorInfo : info.getConstructors()) {
+    for (GeneratedModelInfo.ConstructorInfo constructorInfo : info.getConstructors()) {
       Builder builder = MethodSpec.constructorBuilder()
           .addModifiers(constructorInfo.modifiers)
           .addParameters(constructorInfo.params)
@@ -217,7 +232,7 @@ class GeneratedModelWriter {
     classBuilder.addMethod(addToMethod);
   }
 
-  private Iterable<MethodSpec> generateBindMethods(ClassToGenerateInfo classInfo) {
+  private Iterable<MethodSpec> generateBindMethods(GeneratedModelInfo classInfo) {
     List<MethodSpec> methods = new ArrayList<>();
 
     // Add bind/unbind methods so the class can set the epoxyModelBoundObject and
@@ -226,9 +241,8 @@ class GeneratedModelWriter {
     TypeName viewHolderType = getClassName(EPOXY_VIEW_HOLDER_TYPE);
     ParameterSpec viewHolderParam = ParameterSpec.builder(viewHolderType, "holder", FINAL).build();
 
-    TypeName boundObjectType = TypeName.get(classInfo.getModelType());
     ParameterSpec boundObjectParam =
-        ParameterSpec.builder(boundObjectType, "object", FINAL).build();
+        ParameterSpec.builder(classInfo.getModelType(), "object", FINAL).build();
 
     Builder preBindBuilder = MethodSpec.methodBuilder("handlePreBind")
         .addModifiers(PUBLIC)
@@ -237,7 +251,7 @@ class GeneratedModelWriter {
         .addParameter(boundObjectParam)
         .addParameter(TypeName.INT, "position");
 
-    addHashCodeValidationIfNecessary(preBindBuilder, classInfo,
+    addHashCodeValidationIfNecessary(preBindBuilder,
         "The model was changed between being added to the controller and being bound.");
 
     ClassName viewType = getClassName("android.view.View");
@@ -265,7 +279,7 @@ class GeneratedModelWriter {
           classInfo.getGeneratedName());
 
       preBindBuilder
-          .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
+          .addStatement(attribute.setterCode(), clickListenerCodeBlock)
           .endControlFlow();
     }
 
@@ -280,7 +294,7 @@ class GeneratedModelWriter {
         .addStatement("$L.onModelBound(this, object, position)", modelBindListenerFieldName())
         .endControlFlow();
 
-    addHashCodeValidationIfNecessary(postBindBuilder, classInfo,
+    addHashCodeValidationIfNecessary(postBindBuilder,
         "The model was changed during the bind call.");
 
     methods.add(postBindBuilder
@@ -289,7 +303,7 @@ class GeneratedModelWriter {
     ParameterizedTypeName onBindListenerType = ParameterizedTypeName.get(
         getClassName(ON_BIND_MODEL_LISTENER_TYPE),
         classInfo.getParameterizedGeneratedName(),
-        TypeName.get(classInfo.getModelType())
+        classInfo.getModelType()
     );
     ParameterSpec bindListenerParam = ParameterSpec.builder(onBindListenerType, "listener").build();
 
@@ -305,7 +319,7 @@ class GeneratedModelWriter {
         .returns(classInfo.getParameterizedGeneratedName())
         .addParameter(bindListenerParam);
 
-    addMutabilityValidationIfNecessary(onBind, classInfo)
+    addOnMutationCall(onBind)
         .addStatement("this.$L = listener", modelBindListenerFieldName())
         .addStatement("return this")
         .build();
@@ -313,7 +327,7 @@ class GeneratedModelWriter {
     methods.add(onBind.build());
 
     ParameterSpec unbindObjectParam =
-        ParameterSpec.builder(boundObjectType, "object").build();
+        ParameterSpec.builder(classInfo.getModelType(), "object").build();
 
     Builder unbindBuilder = MethodSpec.methodBuilder("unbind")
         .addAnnotation(Override.class)
@@ -332,7 +346,7 @@ class GeneratedModelWriter {
     ParameterizedTypeName onUnbindListenerType = ParameterizedTypeName.get(
         getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
         classInfo.getParameterizedGeneratedName(),
-        TypeName.get(classInfo.getModelType())
+        classInfo.getModelType()
     );
     ParameterSpec unbindListenerParam =
         ParameterSpec.builder(onUnbindListenerType, "listener").build();
@@ -349,7 +363,7 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(classInfo.getParameterizedGeneratedName());
 
-    addMutabilityValidationIfNecessary(onUnbind, classInfo)
+    addOnMutationCall(onUnbind)
         .addParameter(unbindListenerParam)
         .addStatement("this.$L = listener", modelUnbindListenerFieldName())
         .addStatement("return this");
@@ -359,10 +373,10 @@ class GeneratedModelWriter {
     return methods;
   }
 
-  private Iterable<MethodSpec> generateMethodsReturningClassType(ClassToGenerateInfo info) {
+  private Iterable<MethodSpec> generateMethodsReturningClassType(GeneratedModelInfo info) {
     List<MethodSpec> methods = new ArrayList<>(info.getMethodsReturningClassType().size());
 
-    for (ClassToGenerateInfo.MethodInfo methodInfo : info.getMethodsReturningClassType()) {
+    for (GeneratedModelInfo.MethodInfo methodInfo : info.getMethodsReturningClassType()) {
       Builder builder = MethodSpec.methodBuilder(methodInfo.name)
           .addModifiers(methodInfo.modifiers)
           .addParameters(methodInfo.params)
@@ -387,12 +401,11 @@ class GeneratedModelWriter {
    * Generates default implementations of certain model methods if the model is abstract and doesn't
    * implement them.
    */
-  private Iterable<MethodSpec> generateDefaultMethodImplementations(ClassToGenerateInfo info) {
+  private Iterable<MethodSpec> generateDefaultMethodImplementations(GeneratedModelInfo info) {
     List<MethodSpec> methods = new ArrayList<>();
-    TypeElement originalClassElement = info.getOriginalClassElement();
 
-    addCreateHolderMethodIfNeeded(originalClassElement, methods);
-    addDefaultLayoutMethodIfNeeded(originalClassElement, methods);
+    addCreateHolderMethodIfNeeded(info, methods);
+    addDefaultLayoutMethodIfNeeded(info, methods);
 
     return methods;
   }
@@ -401,9 +414,10 @@ class GeneratedModelWriter {
    * If the model is a holder and doesn't implement the "createNewHolder" method we can generate a
    * default implementation by getting the class type and creating a new instance of it.
    */
-  private void addCreateHolderMethodIfNeeded(TypeElement originalClassElement,
+  private void addCreateHolderMethodIfNeeded(GeneratedModelInfo modelClassInfo,
       List<MethodSpec> methods) {
 
+    TypeElement originalClassElement = modelClassInfo.getSuperClassElement();
     if (!isEpoxyModelWithHolder(originalClassElement)) {
       return;
     }
@@ -418,17 +432,9 @@ class GeneratedModelWriter {
       return;
     }
 
-    TypeMirror epoxyObjectType = getEpoxyObjectType(originalClassElement, typeUtils);
-    if (epoxyObjectType == null) {
-      errorLogger
-          .logError("Return type for createNewHolder method could not be found. (class: %s)",
-              originalClassElement.getSimpleName());
-      return;
-    }
-
     createHolderMethod = createHolderMethod.toBuilder()
-        .returns(TypeName.get(epoxyObjectType))
-        .addStatement("return new $T()", epoxyObjectType)
+        .returns(modelClassInfo.getModelType())
+        .addStatement("return new $T()", modelClassInfo.getModelType())
         .build();
 
     methods.add(createHolderMethod);
@@ -438,7 +444,7 @@ class GeneratedModelWriter {
    * If there is no existing implementation of getDefaultLayout we can generate an implementation.
    * This relies on a layout res being set in the @EpoxyModelClass annotation.
    */
-  private void addDefaultLayoutMethodIfNeeded(TypeElement originalClassElement,
+  private void addDefaultLayoutMethodIfNeeded(GeneratedModelInfo modelInfo,
       List<MethodSpec> methods) {
 
     MethodSpec getDefaultLayoutMethod = MethodSpec.methodBuilder(
@@ -449,22 +455,31 @@ class GeneratedModelWriter {
         .returns(TypeName.INT)
         .build();
 
-    if (implementsMethod(originalClassElement, getDefaultLayoutMethod, typeUtils)) {
-      return;
-    }
+    // TODO: This is pretty ugly and could be abstracted/decomposed better. We could probably
+    // make a small class to contain this logic, or build it into the model info classes
+    LayoutResource layout;
+    if (modelInfo instanceof DataBindingModelInfo) {
+      layout = ((DataBindingModelInfo) modelInfo).getLayoutResource();
+    } else {
 
-    TypeElement modelClassWithAnnotation = findSuperClassWithClassAnnotation(originalClassElement);
-    if (modelClassWithAnnotation == null) {
-      errorLogger
-          .logError("Model must use %s annotation if it does not implement %s. (class: %s)",
-              EpoxyModelClass.class,
-              GET_DEFAULT_LAYOUT_METHOD_NAME,
-              originalClassElement.getSimpleName());
-      return;
-    }
+      TypeElement superClassElement = modelInfo.getSuperClassElement();
+      if (implementsMethod(superClassElement, getDefaultLayoutMethod, typeUtils)) {
+        return;
+      }
 
-    LayoutResource layout = layoutResourceProcessor
-        .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
+      TypeElement modelClassWithAnnotation = findSuperClassWithClassAnnotation(superClassElement);
+      if (modelClassWithAnnotation == null) {
+        errorLogger
+            .logError("Model must use %s annotation if it does not implement %s. (class: %s)",
+                EpoxyModelClass.class,
+                GET_DEFAULT_LAYOUT_METHOD_NAME,
+                modelInfo.getSuperClassName());
+        return;
+      }
+
+      layout = layoutResourceProcessor
+          .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
+    }
 
     getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
         .addStatement("return $L", layout.code)
@@ -478,8 +493,8 @@ class GeneratedModelWriter {
    * the basic method and a method that checks for payload changes and only sets the variables that
    * changed.
    */
-  private Iterable<MethodSpec> generateDataBindingMethodsIfNeeded(ClassToGenerateInfo info) {
-    if (!isDataBindingModel(info.getOriginalClassElement())) {
+  private Iterable<MethodSpec> generateDataBindingMethodsIfNeeded(GeneratedModelInfo info) {
+    if (!isDataBindingModel(info.getSuperClassElement())) {
       return Collections.emptyList();
     }
 
@@ -491,13 +506,13 @@ class GeneratedModelWriter {
         .build();
 
     // If the base method is already implemented don't bother checking for the payload method
-    if (implementsMethod(info.getOriginalClassElement(), bindVariablesMethod, typeUtils)) {
+    if (implementsMethod(info.getSuperClassElement(), bindVariablesMethod, typeUtils)) {
       return Collections.emptyList();
     }
 
     ClassName generatedModelClass = info.getGeneratedName();
 
-    String moduleName = dataBindingModuleLookup.getModuleName(info.getOriginalClassElement());
+    String moduleName = dataBindingModuleLookup.getModuleName(info.getSuperClassElement());
 
     Builder baseMethodBuilder = bindVariablesMethod.toBuilder();
 
@@ -526,7 +541,7 @@ class GeneratedModelWriter {
             .addStatement(
                 "throw new $T(\"The attribute $L was defined in your data binding model ($L) but "
                     + "a data variable of that name was not found in the layout.\")",
-                IllegalStateException.class, attrName, info.getOriginalClassName())
+                IllegalStateException.class, attrName, info.getSuperClassName())
             .endControlFlow();
       } else {
         baseMethodBuilder.addStatement("$L", setVariableBlock);
@@ -605,7 +620,7 @@ class GeneratedModelWriter {
     statementBuilder.append(")");
   }
 
-  private List<MethodSpec> generateSettersAndGetters(ClassToGenerateInfo helperClass) {
+  private List<MethodSpec> generateSettersAndGetters(GeneratedModelInfo helperClass) {
     List<MethodSpec> methods = new ArrayList<>();
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
@@ -615,13 +630,16 @@ class GeneratedModelWriter {
       if (attributeInfo.generateSetter() && !attributeInfo.hasFinalModifier()) {
         methods.add(generateSetter(helperClass, attributeInfo));
       }
-      methods.add(generateGetter(attributeInfo));
+
+      if (attributeInfo.generateGetter()) {
+        methods.add(generateGetter(attributeInfo));
+      }
     }
 
     return methods;
   }
 
-  private MethodSpec generateSetClickModelListener(ClassToGenerateInfo classInfo,
+  private MethodSpec generateSetClickModelListener(GeneratedModelInfo classInfo,
       AttributeInfo attribute) {
     String attributeName = attribute.getName();
 
@@ -658,20 +676,20 @@ class GeneratedModelWriter {
             + "      }",
         clickWrapperType, attributeName, viewType, modelClickListenerType);
 
-    addMutabilityValidationIfNecessary(builder, classInfo)
+    addOnMutationCall(builder)
         .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName)
         .beginControlFlow("if ($L == null)", attributeName)
-        .addStatement("super." + attribute.setterCode(), "null")
+        .addStatement(attribute.setterCode(), "null")
         .endControlFlow()
         .beginControlFlow("else")
-        .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
+        .addStatement(attribute.setterCode(), clickListenerCodeBlock)
         .endControlFlow()
         .addStatement("return this");
 
     return builder.build();
   }
 
-  private MethodSpec generateEquals(ClassToGenerateInfo helperClass) {
+  private MethodSpec generateEquals(GeneratedModelInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("equals")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
@@ -706,7 +724,7 @@ class GeneratedModelWriter {
         .endControlFlow();
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
-      TypeName type = attributeInfo.getType();
+      TypeName type = attributeInfo.getTypeName();
 
       if (!attributeInfo.useInHash() && type.isPrimitive()) {
         continue;
@@ -724,7 +742,7 @@ class GeneratedModelWriter {
 
   private static MethodSpec.Builder startNotEqualsControlFlow(MethodSpec.Builder methodBuilder,
       AttributeInfo attribute) {
-    TypeName attributeType = attribute.getType();
+    TypeName attributeType = attribute.getTypeName();
     boolean useHash = attributeType.isPrimitive() || attribute.useInHash();
     return startNotEqualsControlFlow(methodBuilder, useHash, attributeType, attribute.getterCode());
   }
@@ -758,7 +776,7 @@ class GeneratedModelWriter {
     return builder;
   }
 
-  private MethodSpec generateHashCode(ClassToGenerateInfo helperClass) {
+  private MethodSpec generateHashCode(GeneratedModelInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("hashCode")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
@@ -783,14 +801,14 @@ class GeneratedModelWriter {
       if (!attributeInfo.useInHash()) {
         continue;
       }
-      if (attributeInfo.getType() == DOUBLE) {
+      if (attributeInfo.getTypeName() == DOUBLE) {
         builder.addStatement("long temp");
         break;
       }
     }
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
-      TypeName type = attributeInfo.getType();
+      TypeName type = attributeInfo.getTypeName();
 
       if (!attributeInfo.useInHash() && type.isPrimitive()) {
         continue;
@@ -832,7 +850,7 @@ class GeneratedModelWriter {
     }
   }
 
-  private MethodSpec generateToString(ClassToGenerateInfo helperClass) {
+  private MethodSpec generateToString(GeneratedModelInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("toString")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
@@ -862,29 +880,32 @@ class GeneratedModelWriter {
   private MethodSpec generateGetter(AttributeInfo data) {
     return MethodSpec.methodBuilder(data.getName())
         .addModifiers(PUBLIC)
-        .returns(data.getType())
+        .returns(data.getTypeName())
         .addAnnotations(data.getGetterAnnotations())
         .addStatement("return $L", data.getterCode())
         .build();
   }
 
-  private MethodSpec generateSetter(ClassToGenerateInfo helperClass, AttributeInfo attribute) {
+  private MethodSpec generateSetter(GeneratedModelInfo helperClass, AttributeInfo attribute) {
     String attributeName = attribute.getName();
     Builder builder = MethodSpec.methodBuilder(attributeName)
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
-        .addParameter(ParameterSpec.builder(attribute.getType(), attributeName)
+        .addParameter(ParameterSpec.builder(attribute.getTypeName(), attributeName)
             .addAnnotations(attribute.getSetterAnnotations()).build());
 
-    addMutabilityValidationIfNecessary(builder, helperClass)
-        .addStatement("this." + attribute.setterCode(), attributeName);
+    addOnMutationCall(builder)
+        .addStatement(attribute.setterCode(), attributeName);
 
     if (attribute.isViewClickListener()) {
       // Null out the model click listener since this view click listener should replace it
       builder.addStatement("this.$L = null", attribute.getModelClickListenerName());
     }
 
-    if (attribute.hasSuperSetterMethod()) {
+    // Call the super setter if it exists.
+    // No need to do this if the attribute is private since we already called the super setter to
+    // set it
+    if (!attribute.isPrivate && attribute.hasSuperSetterMethod()) {
       builder.addStatement("super.$L($L)", attributeName, attributeName);
     }
 
@@ -893,7 +914,7 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private MethodSpec generateReset(ClassToGenerateInfo helperClass) {
+  private MethodSpec generateReset(GeneratedModelInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("reset")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
@@ -903,8 +924,8 @@ class GeneratedModelWriter {
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {
-        builder.addStatement("this." + attributeInfo.setterCode(),
-            getDefaultValue(attributeInfo.getType()));
+        builder.addStatement(attributeInfo.setterCode(),
+            getDefaultValue(attributeInfo.getTypeName()));
       }
 
       if (attributeInfo.isViewClickListener()) {
@@ -918,17 +939,12 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private MethodSpec.Builder addMutabilityValidationIfNecessary(MethodSpec.Builder method,
-      ClassToGenerateInfo classInfo) {
-    if (configManager.shouldValidateModelUsage()) {
-      method.addStatement("validateMutability()");
-    }
-
-    return method;
+  private MethodSpec.Builder addOnMutationCall(MethodSpec.Builder method) {
+    return method.addStatement("onMutation()");
   }
 
   private MethodSpec.Builder addHashCodeValidationIfNecessary(MethodSpec.Builder method,
-      ClassToGenerateInfo classInfo, String message) {
+      String message) {
     if (configManager.shouldValidateModelUsage()) {
       method.addStatement("validateStateHasNotChangedSinceAdded($S, position)", message);
     }

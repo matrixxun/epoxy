@@ -46,7 +46,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public AbstractModelWithHolder_ onBind(OnModelBoundListener<AbstractModelWithHolder_, AbstractModelWithHolder.Holder> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -67,14 +67,14 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public AbstractModelWithHolder_ onUnbind(OnModelUnboundListener<AbstractModelWithHolder_, AbstractModelWithHolder.Holder> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public AbstractModelWithHolder_ value(int value) {
-    validateMutability();
-    this.value = value;
+    onMutation();
+    super.value = value;
     return this;
   }
 
@@ -145,7 +145,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
   public AbstractModelWithHolder_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }

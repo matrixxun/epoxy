@@ -53,7 +53,7 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithConstructors_ onBind(OnModelBoundListener<ModelWithConstructors_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -74,14 +74,14 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithConstructors_ onUnbind(OnModelUnboundListener<ModelWithConstructors_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithConstructors_ valueInt(int valueInt) {
-    validateMutability();
-    this.valueInt = valueInt;
+    onMutation();
+    super.valueInt = valueInt;
     return this;
   }
 
@@ -147,7 +147,7 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   public ModelWithConstructors_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.valueInt = 0;
+    super.valueInt = 0;
     super.reset();
     return this;
   }

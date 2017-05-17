@@ -50,7 +50,7 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithVarargsConstructors_ onBind(OnModelBoundListener<ModelWithVarargsConstructors_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -71,14 +71,14 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithVarargsConstructors_ onUnbind(OnModelUnboundListener<ModelWithVarargsConstructors_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithVarargsConstructors_ varargs(String[] varargs) {
-    validateMutability();
-    this.varargs = varargs;
+    onMutation();
+    super.varargs = varargs;
     return this;
   }
 
@@ -87,8 +87,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   public ModelWithVarargsConstructors_ valueInt(int valueInt) {
-    validateMutability();
-    this.valueInt = valueInt;
+    onMutation();
+    super.valueInt = valueInt;
     return this;
   }
 
@@ -154,8 +154,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   public ModelWithVarargsConstructors_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.varargs = null;
-    this.valueInt = 0;
+    super.varargs = null;
+    super.valueInt = 0;
     super.reset();
     return this;
   }

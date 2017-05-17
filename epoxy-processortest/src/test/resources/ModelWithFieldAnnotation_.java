@@ -46,7 +46,7 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithFieldAnnotation_ onBind(OnModelBoundListener<ModelWithFieldAnnotation_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -67,14 +67,14 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithFieldAnnotation_ onUnbind(OnModelUnboundListener<ModelWithFieldAnnotation_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithFieldAnnotation_ title(@Nullable String title) {
-    validateMutability();
-    this.title = title;
+    onMutation();
+    super.title = title;
     return this;
   }
 
@@ -141,7 +141,7 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
   public ModelWithFieldAnnotation_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.title = null;
+    super.title = null;
     super.reset();
     return this;
   }

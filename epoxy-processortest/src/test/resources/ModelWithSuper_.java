@@ -45,7 +45,7 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuper_ onBind(OnModelBoundListener<ModelWithSuper_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,14 +66,14 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuper_ onUnbind(OnModelUnboundListener<ModelWithSuper_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithSuper_ valueInt(int valueInt) {
-    validateMutability();
-    this.valueInt = valueInt;
+    onMutation();
+    super.valueInt = valueInt;
     super.valueInt(valueInt);
     return this;
   }
@@ -140,7 +140,7 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
   public ModelWithSuper_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.valueInt = 0;
+    super.valueInt = 0;
     super.reset();
     return this;
   }

@@ -49,6 +49,7 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public DataBindingModelWithAllFieldTypesNoValidation_ onBind(OnModelBoundListener<DataBindingModelWithAllFieldTypesNoValidation_, DataBindingEpoxyModel.DataBindingHolder> listener) {
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -69,12 +70,14 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public DataBindingModelWithAllFieldTypesNoValidation_ onUnbind(OnModelUnboundListener<DataBindingModelWithAllFieldTypesNoValidation_, DataBindingEpoxyModel.DataBindingHolder> listener) {
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueInteger(Integer valueInteger) {
-    this.valueInteger = valueInteger;
+    onMutation();
+    super.valueInteger = valueInteger;
     return this;
   }
 
@@ -83,7 +86,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueShort(short valueShort) {
-    this.valueShort = valueShort;
+    onMutation();
+    super.valueShort = valueShort;
     return this;
   }
 
@@ -92,7 +96,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueLong(long valueLong) {
-    this.valueLong = valueLong;
+    onMutation();
+    super.valueLong = valueLong;
     return this;
   }
 
@@ -101,7 +106,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueList(List<String> valueList) {
-    this.valueList = valueList;
+    onMutation();
+    super.valueList = valueList;
     return this;
   }
 
@@ -110,7 +116,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueShortWrapper(Short valueShortWrapper) {
-    this.valueShortWrapper = valueShortWrapper;
+    onMutation();
+    super.valueShortWrapper = valueShortWrapper;
     return this;
   }
 
@@ -119,7 +126,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueDouble(double valueDouble) {
-    this.valueDouble = valueDouble;
+    onMutation();
+    super.valueDouble = valueDouble;
     return this;
   }
 
@@ -128,7 +136,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueChar(char valueChar) {
-    this.valueChar = valueChar;
+    onMutation();
+    super.valueChar = valueChar;
     return this;
   }
 
@@ -137,7 +146,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueInt(int valueInt) {
-    this.valueInt = valueInt;
+    onMutation();
+    super.valueInt = valueInt;
     return this;
   }
 
@@ -146,7 +156,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueDoubleWrapper(Double valueDoubleWrapper) {
-    this.valueDoubleWrapper = valueDoubleWrapper;
+    onMutation();
+    super.valueDoubleWrapper = valueDoubleWrapper;
     return this;
   }
 
@@ -155,7 +166,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueFloatWrapper(Float valueFloatWrapper) {
-    this.valueFloatWrapper = valueFloatWrapper;
+    onMutation();
+    super.valueFloatWrapper = valueFloatWrapper;
     return this;
   }
 
@@ -164,7 +176,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
-    this.valueBooleanWrapper = valueBooleanWrapper;
+    onMutation();
+    super.valueBooleanWrapper = valueBooleanWrapper;
     return this;
   }
 
@@ -173,7 +186,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueByteWrapper(Byte valueByteWrapper) {
-    this.valueByteWrapper = valueByteWrapper;
+    onMutation();
+    super.valueByteWrapper = valueByteWrapper;
     return this;
   }
 
@@ -182,7 +196,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valuebByte(byte valuebByte) {
-    this.valuebByte = valuebByte;
+    onMutation();
+    super.valuebByte = valuebByte;
     return this;
   }
 
@@ -191,7 +206,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueLongWrapper(Long valueLongWrapper) {
-    this.valueLongWrapper = valueLongWrapper;
+    onMutation();
+    super.valueLongWrapper = valueLongWrapper;
     return this;
   }
 
@@ -200,7 +216,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueCharacter(Character valueCharacter) {
-    this.valueCharacter = valueCharacter;
+    onMutation();
+    super.valueCharacter = valueCharacter;
     return this;
   }
 
@@ -209,7 +226,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueString(String valueString) {
-    this.valueString = valueString;
+    onMutation();
+    super.valueString = valueString;
     return this;
   }
 
@@ -218,7 +236,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueFloat(float valueFloat) {
-    this.valueFloat = valueFloat;
+    onMutation();
+    super.valueFloat = valueFloat;
     return this;
   }
 
@@ -227,7 +246,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueBoolean(boolean valueBoolean) {
-    this.valueBoolean = valueBoolean;
+    onMutation();
+    super.valueBoolean = valueBoolean;
     return this;
   }
 
@@ -236,7 +256,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueObjectArray(Object[] valueObjectArray) {
-    this.valueObjectArray = valueObjectArray;
+    onMutation();
+    super.valueObjectArray = valueObjectArray;
     return this;
   }
 
@@ -245,7 +266,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueObject(Object valueObject) {
-    this.valueObject = valueObject;
+    onMutation();
+    super.valueObject = valueObject;
     return this;
   }
 
@@ -254,7 +276,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   public DataBindingModelWithAllFieldTypesNoValidation_ valueIntArray(int[] valueIntArray) {
-    this.valueIntArray = valueIntArray;
+    onMutation();
+    super.valueIntArray = valueIntArray;
     return this;
   }
 
@@ -417,27 +440,27 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   public DataBindingModelWithAllFieldTypesNoValidation_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.valueInteger = null;
-    this.valueShort = (short) 0;
-    this.valueLong = 0L;
-    this.valueList = null;
-    this.valueShortWrapper = null;
-    this.valueDouble = 0.0d;
-    this.valueChar = (char) 0;
-    this.valueInt = 0;
-    this.valueDoubleWrapper = null;
-    this.valueFloatWrapper = null;
-    this.valueBooleanWrapper = null;
-    this.valueByteWrapper = null;
-    this.valuebByte = (byte) 0;
-    this.valueLongWrapper = null;
-    this.valueCharacter = null;
-    this.valueString = null;
-    this.valueFloat = 0.0f;
-    this.valueBoolean = false;
-    this.valueObjectArray = null;
-    this.valueObject = null;
-    this.valueIntArray = null;
+    super.valueInteger = null;
+    super.valueShort = (short) 0;
+    super.valueLong = 0L;
+    super.valueList = null;
+    super.valueShortWrapper = null;
+    super.valueDouble = 0.0d;
+    super.valueChar = (char) 0;
+    super.valueInt = 0;
+    super.valueDoubleWrapper = null;
+    super.valueFloatWrapper = null;
+    super.valueBooleanWrapper = null;
+    super.valueByteWrapper = null;
+    super.valuebByte = (byte) 0;
+    super.valueLongWrapper = null;
+    super.valueCharacter = null;
+    super.valueString = null;
+    super.valueFloat = 0.0f;
+    super.valueBoolean = false;
+    super.valueObjectArray = null;
+    super.valueObject = null;
+    super.valueIntArray = null;
     super.reset();
     return this;
   }

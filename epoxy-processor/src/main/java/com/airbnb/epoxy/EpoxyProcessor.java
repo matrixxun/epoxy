@@ -2,10 +2,11 @@ package com.airbnb.epoxy;
 
 import com.google.auto.service.AutoService;
 
-import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ConfigManager.PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE;
 
 /**
@@ -42,6 +44,10 @@ public class EpoxyProcessor extends AbstractProcessor {
   private ConfigManager configManager;
   private DataBindingModuleLookup dataBindingModuleLookup;
   private final ErrorLogger errorLogger = new ErrorLogger();
+  private GeneratedModelWriter modelWriter;
+  private ControllerProcessor controllerProcessor;
+  private DataBindingProcessor dataBindingProcessor;
+  private final List<GeneratedModelInfo> generatedModels = new ArrayList<>();
 
   public EpoxyProcessor() {
     this(Collections.<String, String>emptyMap());
@@ -62,6 +68,13 @@ public class EpoxyProcessor extends AbstractProcessor {
     return new EpoxyProcessor(options);
   }
 
+  /** For testing. */
+  public static EpoxyProcessor withImplicitAdding() {
+    HashMap<String, String> options = new HashMap<>();
+    options.put(PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS, "true");
+    return new EpoxyProcessor(options);
+  }
+
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
@@ -78,27 +91,32 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     dataBindingModuleLookup =
         new DataBindingModuleLookup(elementUtils, typeUtils, errorLogger, layoutResourceProcessor);
+
+    modelWriter =
+        new GeneratedModelWriter(filer, typeUtils, errorLogger,
+            layoutResourceProcessor,
+            configManager, dataBindingModuleLookup);
+
+    controllerProcessor = new ControllerProcessor(filer, elementUtils, errorLogger, configManager);
+
+    dataBindingProcessor =
+        new DataBindingProcessor(elementUtils, typeUtils, errorLogger, configManager,
+            layoutResourceProcessor, dataBindingModuleLookup, modelWriter);
   }
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
     Set<String> types = new LinkedHashSet<>();
-    for (Class<? extends Annotation> annotation : getSupportedAnnotations()) {
-      types.add(annotation.getCanonicalName());
-    }
+
+    types.add(EpoxyModelClass.class.getCanonicalName());
+    types.add(EpoxyAttribute.class.getCanonicalName());
+    types.add(PackageEpoxyConfig.class.getCanonicalName());
+    types.add(AutoModel.class.getCanonicalName());
+    types.add(EpoxyDataBindingLayouts.class.getCanonicalName());
+
+    types.add(ClassNames.LITHO_ANNOTATION_LAYOUT_SPEC.reflectionName());
+
     return types;
-  }
-
-  static Set<Class<? extends Annotation>> getSupportedAnnotations() {
-    Set<Class<? extends Annotation>> annotations = new LinkedHashSet<>();
-
-    annotations.add(EpoxyModelClass.class);
-    annotations.add(EpoxyAttribute.class);
-    annotations.add(PackageEpoxyConfig.class);
-    annotations.add(AutoModel.class);
-    annotations.add(EpoxyDataBindingLayouts.class);
-
-    return annotations;
   }
 
   @Override
@@ -110,18 +128,26 @@ public class EpoxyProcessor extends AbstractProcessor {
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     errorLogger.logErrors(configManager.processConfigurations(roundEnv));
 
-    ModelProcessor modelProcessor = new ModelProcessor(filer, messager,
-        elementUtils, typeUtils, configManager, errorLogger, layoutResourceProcessor,
-        dataBindingModuleLookup);
-    modelProcessor.processModels(roundEnv);
+    ModelProcessor modelProcessor = new ModelProcessor(messager,
+        elementUtils, typeUtils, configManager, errorLogger,
+        modelWriter);
 
-    new ControllerProcessor(filer, elementUtils, errorLogger, configManager)
-        .process(roundEnv, modelProcessor.getGeneratedModels());
+    generatedModels.addAll(modelProcessor.processModels(roundEnv));
 
-    new DataBindingProcessor(filer, elementUtils, typeUtils, errorLogger, configManager,
-        layoutResourceProcessor, dataBindingModuleLookup).process(roundEnv);
+    dataBindingProcessor.process(roundEnv);
+
+    LithoSpecProcessor lithoSpecProcessor = new LithoSpecProcessor(
+        elementUtils, typeUtils, configManager, errorLogger, modelWriter);
+
+    generatedModels.addAll(lithoSpecProcessor.processSpecs(roundEnv));
+
+    controllerProcessor.process(roundEnv);
 
     if (roundEnv.processingOver()) {
+      generatedModels.addAll(dataBindingProcessor.resolveDataBindingClassesAndWriteJava());
+
+      // This must be done after all generated model info is collected
+      controllerProcessor.resolveGeneratedModelsAndWriteJava(generatedModels);
 
       // We wait until the very end to log errors so that all the generated classes are still
       // created.

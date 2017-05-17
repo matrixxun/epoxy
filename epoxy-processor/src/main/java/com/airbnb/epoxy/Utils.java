@@ -5,8 +5,10 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -25,12 +27,15 @@ import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 
-class ProcessorUtils {
+class Utils {
+  private static final Pattern PATTERN_STARTS_WITH_SET = Pattern.compile("set[A-Z]\\w*");
 
   static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
   static final String UNTYPED_EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel";
-  static final String EPOXY_MODEL_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
+  static final String EPOXY_MODEL_WITH_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
   static final String EPOXY_VIEW_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyViewHolder";
+  static final String EPOXY_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyHolder";
+  static final String ANDROID_VIEW_TYPE = "android.view.View";
   static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
   static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
@@ -43,6 +48,30 @@ class ProcessorUtils {
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  static Class<?> getClass(ClassName name) {
+    try {
+      return Class.forName(name.reflectionName());
+    } catch (ClassNotFoundException | NoClassDefFoundError e) {
+      return null;
+    }
+  }
+
+  static Class<? extends Annotation> getAnnotationClass(ClassName name) {
+    try {
+      return (Class<? extends Annotation>) getClass(name);
+    } catch (ClassCastException e) {
+      return null;
+    }
+  }
+
+  static Element getElementByName(ClassName name, Elements elements, Types types) {
+    try {
+      return elements.getTypeElement(name.reflectionName());
+    } catch (MirroredTypeException mte) {
+      return types.asElement(mte.getTypeMirror());
+    }
   }
 
   static Element getElementByName(String name, Elements elements, Types types) {
@@ -61,8 +90,8 @@ class ProcessorUtils {
     return new EpoxyProcessorException(String.format(msg, args));
   }
 
-  static boolean isViewClickListenerType(Element element) {
-    return isSubtypeOfType(element.asType(), VIEW_CLICK_LISTENER_TYPE);
+  static boolean isViewClickListenerType(TypeMirror type) {
+    return isSubtypeOfType(type, VIEW_CLICK_LISTENER_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {
@@ -82,7 +111,7 @@ class ProcessorUtils {
   }
 
   static boolean isEpoxyModelWithHolder(TypeElement type) {
-    return isSubtypeOfType(type.asType(), EPOXY_MODEL_HOLDER_TYPE);
+    return isSubtypeOfType(type.asType(), EPOXY_MODEL_WITH_HOLDER_TYPE);
   }
 
   static boolean isDataBindingModel(TypeElement type) {
@@ -210,20 +239,38 @@ class ProcessorUtils {
    * Eg for "class MyModel extends EpoxyModel<TextView>" it would return TextView.
    */
   static TypeMirror getEpoxyObjectType(TypeElement clazz, Types typeUtils) {
-    if (clazz.asType().getKind() != TypeKind.DECLARED) {
+    if (clazz.getSuperclass().getKind() != TypeKind.DECLARED) {
       return null;
     }
 
     DeclaredType superclass = (DeclaredType) clazz.getSuperclass();
-    List<? extends TypeMirror> superTypeArguments = superclass.getTypeArguments();
+    TypeMirror recursiveResult =
+        getEpoxyObjectType((TypeElement) typeUtils.asElement(superclass), typeUtils);
 
-    if (superTypeArguments.isEmpty()) {
-      return getEpoxyObjectType((TypeElement) typeUtils.asElement(superclass), typeUtils);
+    if (recursiveResult != null && recursiveResult.getKind() != TypeKind.TYPEVAR) {
+      // Use the type on the parent highest in the class hierarchy so we can find the original type.
+      // We don't allow TypeVar since that is just type letter (eg T).
+      return recursiveResult;
     }
 
-    // TODO: (eli_hart 2/2/17) If the class added additional types this won't be correct. That
-    // should be rare, but it would be nice to handle.
-    return superTypeArguments.get(0);
+    List<? extends TypeMirror> superTypeArguments = superclass.getTypeArguments();
+
+    if (superTypeArguments.size() == 1) {
+      // If there is only one type then we use that
+      return superTypeArguments.get(0);
+    }
+
+    for (TypeMirror superTypeArgument : superTypeArguments) {
+      // The user might have added additional types to their class which makes it more difficult
+      // to figure out the base model type. We just look for the first type that is a view or
+      // view holder.
+      if (isSubtypeOfType(superTypeArgument, ANDROID_VIEW_TYPE)
+          || isSubtypeOfType(superTypeArgument, EPOXY_HOLDER_TYPE)) {
+        return superTypeArgument;
+      }
+    }
+
+    return null;
   }
 
   static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
@@ -278,8 +325,30 @@ class ProcessorUtils {
     return original.substring(0, 1).toUpperCase() + original.substring(1);
   }
 
+  static String decapitalizeFirstLetter(String original) {
+    if (original == null || original.isEmpty()) {
+      return original;
+    }
+    return original.substring(0, 1).toLowerCase() + original.substring(1);
+  }
+
   static boolean startsWithIs(String original) {
     return original.startsWith("is") && original.length() > 2
         && Character.isUpperCase(original.charAt(2));
+  }
+
+  static boolean isSetterMethod(Element element) {
+    if (element.getKind() != ElementKind.METHOD) {
+      return false;
+    }
+
+    ExecutableElement method = (ExecutableElement) element;
+    String methodName = method.getSimpleName().toString();
+    return PATTERN_STARTS_WITH_SET.matcher(methodName).matches()
+        && method.getParameters().size() == 1;
+  }
+
+  static String removeSetPrefix(String string) {
+    return String.valueOf(string.charAt(3)).toLowerCase() + string.substring(4);
   }
 }

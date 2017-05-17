@@ -50,7 +50,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithIntDef_ onBind(OnModelBoundListener<ModelWithIntDef_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -71,14 +71,14 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithIntDef_ onUnbind(OnModelUnboundListener<ModelWithIntDef_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithIntDef_ type(@ModelWithIntDef.MyType int type) {
-    validateMutability();
-    this.type = type;
+    onMutation();
+    super.type = type;
     return this;
   }
 
@@ -145,7 +145,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   public ModelWithIntDef_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.type = 0;
+    super.type = 0;
     super.reset();
     return this;
   }

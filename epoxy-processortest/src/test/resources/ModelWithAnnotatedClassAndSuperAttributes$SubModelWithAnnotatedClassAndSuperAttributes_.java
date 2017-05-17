@@ -45,7 +45,7 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ onBind(OnModelBoundListener<ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,14 +66,14 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ onUnbind(OnModelUnboundListener<ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ superValue(int superValue) {
-    validateMutability();
-    this.superValue = superValue;
+    onMutation();
+    super.superValue = superValue;
     return this;
   }
 
@@ -141,7 +141,7 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.superValue = 0;
+    super.superValue = 0;
     super.reset();
     return this;
   }

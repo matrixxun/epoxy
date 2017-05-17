@@ -45,7 +45,7 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter implements Generated
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithoutSetter_ onBind(OnModelBoundListener<ModelWithoutSetter_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,7 +66,7 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter implements Generated
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithoutSetter_ onUnbind(OnModelUnboundListener<ModelWithoutSetter_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -133,7 +133,7 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter implements Generated
   public ModelWithoutSetter_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }

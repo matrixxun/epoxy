@@ -45,7 +45,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public BasicModelWithAttribute_ onBind(OnModelBoundListener<BasicModelWithAttribute_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,14 +66,14 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public BasicModelWithAttribute_ onUnbind(OnModelUnboundListener<BasicModelWithAttribute_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public BasicModelWithAttribute_ value(int value) {
-    validateMutability();
-    this.value = value;
+    onMutation();
+    super.value = value;
     return this;
   }
 
@@ -139,7 +139,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
   public BasicModelWithAttribute_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }

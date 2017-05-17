@@ -26,13 +26,13 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_CONTROLLER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_MODEL_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.UNTYPED_EPOXY_MODEL_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.getClassName;
-import static com.airbnb.epoxy.ProcessorUtils.isController;
-import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
-import static com.airbnb.epoxy.ProcessorUtils.validateFieldAccessibleViaGeneratedCode;
+import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
+import static com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.getClassName;
+import static com.airbnb.epoxy.Utils.isController;
+import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.validateFieldAccessibleViaGeneratedCode;
 
 class ControllerProcessor {
   private static final String CONTROLLER_HELPER_INTERFACE = "com.airbnb.epoxy.ControllerHelper";
@@ -40,6 +40,7 @@ class ControllerProcessor {
   private Elements elementUtils;
   private ErrorLogger errorLogger;
   private final ConfigManager configManager;
+  private final Map<TypeElement, ControllerClassInfo> controllerClassMap = new LinkedHashMap<>();
 
   ControllerProcessor(Filer filer, Elements elementUtils,
       ErrorLogger errorLogger, ConfigManager configManager) {
@@ -49,9 +50,7 @@ class ControllerProcessor {
     this.configManager = configManager;
   }
 
-  void process(RoundEnvironment roundEnv, List<ClassToGenerateInfo> generatedModels) {
-    LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap = new LinkedHashMap<>();
-
+  void process(RoundEnvironment roundEnv) {
     for (Element modelFieldElement : roundEnv.getElementsAnnotatedWith(AutoModel.class)) {
       try {
         addFieldToControllerClass(modelFieldElement, controllerClassMap);
@@ -59,9 +58,10 @@ class ControllerProcessor {
         errorLogger.logError(e);
       }
     }
+  }
 
+  void resolveGeneratedModelsAndWriteJava(List<GeneratedModelInfo> generatedModels) {
     resolveGeneratedModelNames(controllerClassMap, generatedModels);
-
     generateJava(controllerClassMap);
   }
 
@@ -75,9 +75,8 @@ class ControllerProcessor {
    * @param generatedModels Information about the already generated models. Relies on the model
    *                        processor running first and passing us this information.
    */
-  private void resolveGeneratedModelNames(
-      LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap,
-      List<ClassToGenerateInfo> generatedModels) {
+  private void resolveGeneratedModelNames(Map<TypeElement, ControllerClassInfo> controllerClassMap,
+      List<GeneratedModelInfo> generatedModels) {
 
     for (ControllerClassInfo controllerClassInfo : controllerClassMap.values()) {
       for (ControllerModelField model : controllerClassInfo.models) {
@@ -101,9 +100,9 @@ class ControllerProcessor {
    * no match is found the original model type is returned as a fallback.
    */
   private TypeName getFullyQualifiedModelTypeName(ControllerModelField model,
-      List<ClassToGenerateInfo> generatedModels) {
+      List<GeneratedModelInfo> generatedModels) {
     String modelName = model.typeName.toString();
-    for (ClassToGenerateInfo generatedModel : generatedModels) {
+    for (GeneratedModelInfo generatedModel : generatedModels) {
       String generatedName = generatedModel.getGeneratedName().toString();
       if (generatedName.endsWith("." + modelName)) {
         return generatedModel.getGeneratedName();
@@ -115,7 +114,7 @@ class ControllerProcessor {
   }
 
   private void addFieldToControllerClass(Element modelField,
-      LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap) {
+      Map<TypeElement, ControllerClassInfo> controllerClassMap) {
 
     TypeElement controllerClassElement = (TypeElement) modelField.getEnclosingElement();
 
@@ -164,7 +163,7 @@ class ControllerProcessor {
     return new ControllerModelField(modelFieldElement);
   }
 
-  private void generateJava(LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap) {
+  private void generateJava(Map<TypeElement, ControllerClassInfo> controllerClassMap) {
     for (Entry<TypeElement, ControllerClassInfo> controllerInfo : controllerClassMap.entrySet()) {
       try {
         generateHelperClassForController(controllerInfo.getValue());
@@ -292,10 +291,15 @@ class ControllerProcessor {
       builder.addStatement("validateModelsHaveNotChanged()");
     }
 
+    boolean implicitlyAddAutoModels = configManager.implicitlyAddAutoModels(controllerInfo);
     long id = -1;
     for (ControllerModelField model : controllerInfo.models) {
       builder.addStatement("controller.$L = new $T()", model.fieldName, model.typeName)
           .addStatement("controller.$L.id($L)", model.fieldName, id--);
+
+      if (implicitlyAddAutoModels) {
+        builder.addStatement("setControllerToStageTo(controller.$L, controller)", model.fieldName);
+      }
     }
 
     if (configManager.shouldValidateModelUsage()) {
