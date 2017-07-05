@@ -3,39 +3,37 @@ package com.airbnb.epoxy;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.belongToTheSamePackage;
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.isSubtype;
 import static com.airbnb.epoxy.Utils.validateFieldAccessibleViaGeneratedCode;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.STATIC;
 
 class ModelProcessor {
 
-  private final Messager messager;
   private final Elements elementUtils;
   private final Types typeUtils;
   private final ConfigManager configManager;
   private final ErrorLogger errorLogger;
   private final GeneratedModelWriter modelWriter;
-  private LinkedHashMap<TypeElement, GeneratedModelInfo> modelClassMap;
 
-  ModelProcessor(Messager messager, Elements elementUtils, Types typeUtils,
+  ModelProcessor(Elements elementUtils, Types typeUtils,
       ConfigManager configManager, ErrorLogger errorLogger, GeneratedModelWriter modelWriter) {
-    this.messager = messager;
     this.elementUtils = elementUtils;
     this.typeUtils = typeUtils;
     this.configManager = configManager;
@@ -44,7 +42,7 @@ class ModelProcessor {
   }
 
   Collection<GeneratedModelInfo> processModels(RoundEnvironment roundEnv) {
-    modelClassMap = new LinkedHashMap<>();
+    LinkedHashMap<TypeElement, GeneratedModelInfo> modelClassMap = new LinkedHashMap<>();
 
     for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
       try {
@@ -82,28 +80,7 @@ class ModelProcessor {
       }
     }
 
-    validateAttributesImplementHashCode(modelClassMap.values());
     return modelClassMap.values();
-  }
-
-  private void validateAttributesImplementHashCode(
-      Collection<GeneratedModelInfo> generatedClasses) {
-    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
-
-    for (GeneratedModelInfo generatedClass : generatedClasses) {
-      for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
-        if (configManager.requiresHashCode(attributeInfo)
-            && attributeInfo.useInHash()
-            && !attributeInfo.ignoreRequireHashCode()) {
-
-          try {
-            hashCodeValidator.validate(attributeInfo);
-          } catch (EpoxyProcessorException e) {
-            errorLogger.logError(e);
-          }
-        }
-      }
-    }
   }
 
   private void addAttributeToGeneratedClass(Element attribute,
@@ -183,7 +160,7 @@ class ModelProcessor {
           for (Element element : superclassEpoxyModel.getEnclosedElements()) {
             if (element.getAnnotation(EpoxyAttribute.class) != null) {
               AttributeInfo attributeInfo = buildAttributeInfo(element);
-              if (!belongToTheSamePackage(currentEpoxyModel, superclassEpoxyModel)
+              if (!belongToTheSamePackage(currentEpoxyModel, superclassEpoxyModel, elementUtils)
                   && attributeInfo.isPackagePrivate()) {
                 // We can't inherit a package private attribute if we're not in the same package
                 continue;
@@ -222,13 +199,13 @@ class ModelProcessor {
       for (Entry<TypeElement, GeneratedModelInfo> otherEntry : otherClasses.entrySet()) {
         TypeElement otherClass = otherEntry.getKey();
 
-        if (!isSubtype(thisClass, otherClass)) {
+        if (!isSubtype(thisClass, otherClass, typeUtils)) {
           continue;
         }
 
-        Set<AttributeInfo> otherAttributes = otherEntry.getValue().getAttributeInfo();
+        List<AttributeInfo> otherAttributes = otherEntry.getValue().getAttributeInfo();
 
-        if (belongToTheSamePackage(thisClass, otherClass)) {
+        if (belongToTheSamePackage(thisClass, otherClass, elementUtils)) {
           entry.getValue().addAttributes(otherAttributes);
         } else {
           for (AttributeInfo attribute : otherAttributes) {
@@ -239,23 +216,5 @@ class ModelProcessor {
         }
       }
     }
-  }
-
-  /**
-   * Checks if two classes belong to the same package
-   */
-  private boolean belongToTheSamePackage(TypeElement class1, TypeElement class2) {
-    Name package1 = elementUtils.getPackageOf(class1).getQualifiedName();
-    Name package2 = elementUtils.getPackageOf(class2).getQualifiedName();
-    return package1.equals(package2);
-  }
-
-  private boolean isSubtype(TypeElement e1, TypeElement e2) {
-    return isSubtype(e1.asType(), e2.asType());
-  }
-
-  private boolean isSubtype(TypeMirror e1, TypeMirror e2) {
-    // We use erasure so that EpoxyModelA is considered a subtype of EpoxyModel<T extends View>
-    return typeUtils.isSubtype(e1, typeUtils.erasure(e2));
   }
 }

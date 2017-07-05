@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalStateException;
 import java.lang.Number;
@@ -107,6 +108,12 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
   }
 
   @Override
+  public ModelWithDataBindingBindingModel_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithDataBindingBindingModel_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
@@ -115,6 +122,12 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
   @Override
   public ModelWithDataBindingBindingModel_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelWithDataBindingBindingModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

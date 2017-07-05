@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -106,6 +107,12 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
   }
 
   @Override
+  public ModelForRProcessingTest_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelForRProcessingTest_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
@@ -114,6 +121,12 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
   @Override
   public ModelForRProcessingTest_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelForRProcessingTest_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

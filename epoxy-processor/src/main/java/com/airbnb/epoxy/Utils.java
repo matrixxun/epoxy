@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -7,13 +9,17 @@ import com.squareup.javapoet.TypeName;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
@@ -23,8 +29,18 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.squareup.javapoet.TypeName.BOOLEAN;
+import static com.squareup.javapoet.TypeName.BYTE;
+import static com.squareup.javapoet.TypeName.CHAR;
+import static com.squareup.javapoet.TypeName.DOUBLE;
+import static com.squareup.javapoet.TypeName.FLOAT;
+import static com.squareup.javapoet.TypeName.INT;
+import static com.squareup.javapoet.TypeName.LONG;
+import static com.squareup.javapoet.TypeName.SHORT;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PROTECTED;
+import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 class Utils {
@@ -38,8 +54,10 @@ class Utils {
   static final String ANDROID_VIEW_TYPE = "android.view.View";
   static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
+  static final String VIEW_LONG_CLICK_LISTENER_TYPE = "android.view.View.OnLongClickListener";
   static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
   static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
+  static final String MODEL_LONG_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelLongClickListener";
   static final String ON_BIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelBoundListener";
   static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
   static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
@@ -66,12 +84,30 @@ class Utils {
     }
   }
 
-  static Element getElementByName(ClassName name, Elements elements, Types types) {
-    try {
-      return elements.getTypeElement(name.reflectionName());
-    } catch (MirroredTypeException mte) {
-      return types.asElement(mte.getTypeMirror());
+  static TypeMirror getTypeMirror(ClassName className, Elements elements, Types types) {
+    Element classElement = getElementByName(className, elements, types);
+    if (classElement == null) {
+      throw new IllegalArgumentException("Unknown class: " + className);
     }
+
+    return classElement.asType();
+  }
+
+  static TypeMirror getTypeMirror(Class<?> clazz, Elements elements) {
+    return getTypeMirror(clazz.getCanonicalName(), elements);
+  }
+
+  static TypeMirror getTypeMirror(String canonicalName, Elements elements) {
+    try {
+      return elements.getTypeElement(canonicalName).asType();
+    } catch (MirroredTypeException mte) {
+      return mte.getTypeMirror();
+    }
+  }
+
+  static Element getElementByName(ClassName name, Elements elements, Types types) {
+    String canonicalName = name.reflectionName().replace("$", ".");
+    return getElementByName(canonicalName, elements, types);
   }
 
   static Element getElementByName(String name, Elements elements, Types types) {
@@ -94,16 +130,21 @@ class Utils {
     return isSubtypeOfType(type, VIEW_CLICK_LISTENER_TYPE);
   }
 
+  static boolean isViewLongClickListenerType(TypeMirror type) {
+    return isSubtypeOfType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
+  }
+
   static boolean isIterableType(TypeElement element) {
     return isSubtypeOfType(element.asType(), "java.lang.Iterable<?>");
   }
 
-  static boolean isEpoxyModel(TypeMirror type) {
-    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
-  }
-
   static boolean isController(TypeElement element) {
     return isSubtypeOfType(element.asType(), EPOXY_CONTROLLER_TYPE);
+  }
+
+  static boolean isEpoxyModel(TypeMirror type) {
+    return isSubtypeOfType(type, EPOXY_MODEL_TYPE)
+        || isSubtypeOfType(type, UNTYPED_EPOXY_MODEL_TYPE);
   }
 
   static boolean isEpoxyModel(TypeElement type) {
@@ -159,11 +200,39 @@ class Utils {
   }
 
   /**
+   * Checks if two classes belong to the same package
+   */
+  static boolean belongToTheSamePackage(TypeElement class1, TypeElement class2, Elements elements) {
+    Name package1 = elements.getPackageOf(class1).getQualifiedName();
+    Name package2 = elements.getPackageOf(class2).getQualifiedName();
+    return package1.equals(package2);
+  }
+
+  static boolean isSubtype(TypeElement e1, TypeElement e2, Types types) {
+    return isSubtype(e1.asType(), e2.asType(), types);
+  }
+
+  static boolean isSubtype(TypeMirror e1, TypeMirror e2, Types types) {
+    return types.isSubtype(e1, types.erasure(e2));
+  }
+
+  /**
+   * Checks if the given field has package-private visibility
+   */
+  static boolean isFieldPackagePrivate(Element element) {
+    Set<Modifier> modifiers = element.getModifiers();
+    return !modifiers.contains(PUBLIC)
+        && !modifiers.contains(PROTECTED)
+        && !modifiers.contains(PRIVATE);
+  }
+
+  /**
    * @return True if the clazz (or one of its superclasses) implements the given method. Returns
    * false if the method doesn't exist anywhere in the class hierarchy or it is abstract.
    */
-  static boolean implementsMethod(TypeElement clazz, MethodSpec method, Types typeUtils) {
-    ExecutableElement methodOnClass = getMethodOnClass(clazz, method, typeUtils);
+  static boolean implementsMethod(TypeElement clazz, MethodSpec method, Types typeUtils,
+      Elements elements) {
+    ExecutableElement methodOnClass = getMethodOnClass(clazz, method, typeUtils, elements);
     if (methodOnClass == null) {
       return false;
     }
@@ -172,21 +241,12 @@ class Utils {
     return !modifiers.contains(Modifier.ABSTRACT);
   }
 
-  static TypeMirror getMethodReturnType(TypeElement clazz, MethodSpec method, Types typeUtils) {
-    ExecutableElement methodOnClass = getMethodOnClass(clazz, method, typeUtils);
-
-    if (methodOnClass == null) {
-      return null;
-    }
-
-    return methodOnClass.getReturnType();
-  }
-
   /**
    * @return The first element matching the given method in the class's hierarchy, or null if there
    * is no match.
    */
-  static ExecutableElement getMethodOnClass(TypeElement clazz, MethodSpec method, Types typeUtils) {
+  static ExecutableElement getMethodOnClass(TypeElement clazz, MethodSpec method, Types typeUtils,
+      Elements elements) {
     if (clazz.asType().getKind() != TypeKind.DECLARED) {
       return null;
     }
@@ -198,7 +258,7 @@ class Utils {
           continue;
         }
 
-        if (!areParamsTheSame(methodElement, method)) {
+        if (!areParamsTheSame(methodElement, method, typeUtils, elements)) {
           continue;
         }
 
@@ -210,10 +270,11 @@ class Utils {
     if (superClazz == null) {
       return null;
     }
-    return getMethodOnClass(superClazz, method, typeUtils);
+    return getMethodOnClass(superClazz, method, typeUtils, elements);
   }
 
-  private static boolean areParamsTheSame(ExecutableElement method1, MethodSpec method2) {
+  private static boolean areParamsTheSame(ExecutableElement method1, MethodSpec method2,
+      Types types, Elements elements) {
     List<? extends VariableElement> params1 = method1.getParameters();
     List<ParameterSpec> params2 = method2.parameters;
 
@@ -225,7 +286,16 @@ class Utils {
       VariableElement param1 = params1.get(i);
       ParameterSpec param2 = params2.get(i);
 
-      if (!TypeName.get(param1.asType()).equals(param2.type)) {
+      TypeMirror param1Type = types.erasure(param1.asType());
+      TypeMirror param2Type = types.erasure(getTypeMirror(param2.type.toString(), elements));
+
+      // If a param is a type variable then we don't need an exact type match, it just needs to
+      // be assignable
+      if (param1.asType().getKind() == TypeKind.TYPEVAR) {
+        if (!types.isAssignable(param2Type, param1Type)) {
+          return false;
+        }
+      } else if (!param1Type.toString().equals(param2Type.toString())) {
         return false;
       }
     }
@@ -349,6 +419,100 @@ class Utils {
   }
 
   static String removeSetPrefix(String string) {
+    if (!PATTERN_STARTS_WITH_SET.matcher(string).matches()) {
+      return string;
+    }
+
     return String.valueOf(string.charAt(3)).toLowerCase() + string.substring(4);
+  }
+
+  static boolean isType(Elements elements, Types types, TypeMirror typeMirror, Class<?> clazz) {
+    TypeMirror classType = getTypeMirror(clazz, elements);
+    return types.isSameType(typeMirror, classType);
+  }
+
+  static boolean isType(Elements elements, Types types, TypeMirror typeMirror,
+      Class<?>... typeNames) {
+    for (Class<?> clazz : typeNames) {
+      if (isType(elements, types, typeMirror, clazz)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Nullable
+  static <T extends Annotation> TypeMirror getClassParamFromAnnotation(
+      Element annotatedElement, Class<T> annotationClass, String paramName) {
+    AnnotationMirror am = getAnnotationMirror(annotatedElement, annotationClass);
+    if (am == null) {
+      return null;
+    }
+    AnnotationValue av = getAnnotationValue(am, paramName);
+    if (av == null) {
+      return null;
+    } else {
+      Object value = av.getValue();
+      if (value instanceof TypeMirror) {
+        return (TypeMirror) value;
+      }
+      // Couldn't resolve R class
+      return null;
+    }
+  }
+
+  private static AnnotationMirror getAnnotationMirror(Element typeElement,
+      Class<? extends Annotation> annotationClass) {
+    String clazzName = annotationClass.getName();
+    for (AnnotationMirror m : typeElement.getAnnotationMirrors()) {
+      if (m.getAnnotationType().toString().equals(clazzName)) {
+        return m;
+      }
+    }
+    return null;
+  }
+
+  private static AnnotationValue getAnnotationValue(AnnotationMirror annotationMirror, String key) {
+    for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror
+        .getElementValues().entrySet()) {
+      if (entry.getKey().getSimpleName().toString().equals(key)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  static String toSnakeCase(String s) {
+    return s.replaceAll("([^_A-Z])([A-Z])", "$1_$2").toLowerCase();
+  }
+
+  static <T> T notNull(T object) {
+    if (object == null) {
+      throw new NullPointerException();
+    }
+
+    return object;
+  }
+
+  static String getDefaultValue(TypeName attributeType) {
+    if (attributeType == BOOLEAN) {
+      return "false";
+    } else if (attributeType == INT) {
+      return "0";
+    } else if (attributeType == BYTE) {
+      return "(byte) 0";
+    } else if (attributeType == CHAR) {
+      return "(char) 0";
+    } else if (attributeType == SHORT) {
+      return "(short) 0";
+    } else if (attributeType == LONG) {
+      return "0L";
+    } else if (attributeType == FLOAT) {
+      return "0.0f";
+    } else if (attributeType == DOUBLE) {
+      return "0.0d";
+    } else {
+      return "null";
+    }
   }
 }

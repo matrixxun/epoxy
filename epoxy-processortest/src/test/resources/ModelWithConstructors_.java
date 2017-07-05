@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -114,6 +115,12 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   }
 
   @Override
+  public ModelWithConstructors_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithConstructors_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
@@ -122,6 +129,12 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   @Override
   public ModelWithConstructors_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelWithConstructors_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

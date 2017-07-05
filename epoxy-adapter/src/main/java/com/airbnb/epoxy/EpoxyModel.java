@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public abstract class EpoxyModel<T> {
   private boolean currentlyInInterceptors;
   private int hashCodeWhenAdded;
   private boolean hasDefaultId;
+  private SpanSizeOverrideCallback spanSizeOverride;
 
   protected EpoxyModel(long id) {
     id(id);
@@ -207,6 +209,19 @@ public abstract class EpoxyModel<T> {
   public EpoxyModel<T> id(CharSequence key) {
     id(hashString64Bit(key));
     return this;
+  }
+
+  /**
+   * Use several strings to define the id of the model.
+   * <p>
+   * Similar to {@link #id(CharSequence)}, but with additional strings.
+   */
+  public EpoxyModel<T> id(CharSequence key, CharSequence... otherKeys) {
+    long result = hashString64Bit(key);
+    for (CharSequence otherKey : otherKeys) {
+      result = 31 * result + hashString64Bit(otherKey);
+    }
+    return id(result);
   }
 
   /**
@@ -467,6 +482,23 @@ public abstract class EpoxyModel<T> {
    */
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
     return 1;
+  }
+
+  public EpoxyModel<T> spanSizeOverride(@Nullable SpanSizeOverrideCallback spanSizeCallback) {
+    this.spanSizeOverride = spanSizeCallback;
+    return this;
+  }
+
+  public interface SpanSizeOverrideCallback {
+    int getSpanSize(int totalSpanCount, int position, int itemCount);
+  }
+
+  int getSpanSizeInternal(int totalSpanCount, int position, int itemCount) {
+    if (spanSizeOverride != null) {
+      return spanSizeOverride.getSpanSize(totalSpanCount, position, itemCount);
+    }
+
+    return getSpanSize(totalSpanCount, position, itemCount);
   }
 
   /**

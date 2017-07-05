@@ -1,11 +1,14 @@
 package com.airbnb.epoxy.sample.models;
 
+import android.graphics.drawable.Drawable;
+
 import com.facebook.litho.Column;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.ComponentLayout;
 import com.facebook.litho.annotations.LayoutSpec;
 import com.facebook.litho.annotations.OnCreateLayout;
 import com.facebook.litho.annotations.Prop;
+import com.facebook.litho.annotations.ResType;
 import com.facebook.litho.widget.Text;
 
 import static com.facebook.yoga.YogaEdge.ALL;
@@ -21,8 +24,16 @@ public class ListItemSpec {
   @OnCreateLayout
   static ComponentLayout onCreateLayout(
       ComponentContext c,
-      @Prop int color,
-      @Prop String title,
+      @Prop(optional = true) int color,
+      @Prop(optional = true, resType = ResType.STRING) String title,
+      @Prop(resType = ResType.DIMEN_TEXT) int dimenText,
+      @Prop(resType = ResType.DIMEN_OFFSET) int dimenOffset,
+      @Prop(resType = ResType.DIMEN_SIZE) int dimenSizes,
+      @Prop(resType = ResType.COLOR) int resColor,
+      @Prop(resType = ResType.INT) int resInt,
+      @Prop(resType = ResType.BOOL) boolean resBool,
+      @Prop(resType = ResType.DRAWABLE) Drawable resDrawable,
+      @Prop(resType = ResType.FLOAT) float resFloat,
       @Prop String subtitle) {
 
     return Column.create(c)

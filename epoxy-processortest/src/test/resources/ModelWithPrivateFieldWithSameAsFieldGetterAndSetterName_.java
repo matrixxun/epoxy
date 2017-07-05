@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -78,7 +79,7 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
   }
 
   public boolean isValue() {
-    return isValue();
+    return super.isValue();
   }
 
   @Override
@@ -106,6 +107,13 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
   }
 
   @Override
+  public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ id(CharSequence key,
+      CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
@@ -114,6 +122,12 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
   @Override
   public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 
