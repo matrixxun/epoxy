@@ -1,26 +1,9 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
-
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath 'me.tatarka:gradle-retrolambda:3.5.0'
-  }
-}
-
-repositories {
-  // For retrolambda
-  mavenCentral()
-}
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
-  buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
 
-  // For retrolambda
+  // For java 8 lambdas
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
@@ -28,7 +11,7 @@ android {
 
   defaultConfig {
     applicationId "com.airbnb.android.epoxysample"
-    minSdkVersion rootProject.MIN_SDK_VERSION_LITHO
+    minSdkVersion 16
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     vectorDrawables.useSupportLibrary = true
     versionCode 1
@@ -59,6 +42,9 @@ dependencies {
   compile project(':epoxy-databinding')
   compile project(':epoxy-adapter')
   annotationProcessor project(':epoxy-processor')
+
+  compile rootProject.deps.paris
+  annotationProcessor rootProject.deps.parisProcessor
 
   // Dependencies for the optional litho integration
   compile project(':epoxy-litho')

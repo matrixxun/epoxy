@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -13,7 +14,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> implements GeneratedModel<OnViewRecycledView> {
+public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> implements GeneratedModel<OnViewRecycledView>, OnViewRecycledViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<OnViewRecycledViewModel_, OnViewRecycledView> onModelBoundListener_epoxyGeneratedModel;
@@ -22,6 +23,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private CharSequence title_CharSequence;
 
   @Override
@@ -35,7 +37,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final OnViewRecycledView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -54,7 +56,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
     OnViewRecycledViewModel_ that = (OnViewRecycledViewModel_) previousModel;
     super.bind(object);
 
-    if (title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null) {
+    if ((title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null)) {
       object.setTitle(title_CharSequence);
     }
   }
@@ -108,7 +110,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
    *
    * @see OnViewRecycledView#setTitle(CharSequence)
    */
-  public OnViewRecycledViewModel_ title(CharSequence title) {
+  public OnViewRecycledViewModel_ title(@NonNull CharSequence title) {
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
     }
@@ -118,6 +120,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
     return this;
   }
 
+  @NonNull
   public CharSequence title() {
     return title_CharSequence;
   }
@@ -129,8 +132,8 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
   }
 
   @Override
-  public OnViewRecycledViewModel_ id(Number... ids) {
-    super.id(ids);
+  public OnViewRecycledViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -141,20 +144,20 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
   }
 
   @Override
-  public OnViewRecycledViewModel_ id(CharSequence key) {
-    super.id(key);
+  public OnViewRecycledViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public OnViewRecycledViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public OnViewRecycledViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public OnViewRecycledViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public OnViewRecycledViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -216,13 +219,13 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
       return false;
     }
     OnViewRecycledViewModel_ that = (OnViewRecycledViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null) {
+    if ((title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null)) {
       return false;
     }
     return true;

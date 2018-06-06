@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -10,7 +11,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends GenerateDefaultLayoutMethodParentLayout.WithLayout implements GeneratedModel<Object> {
+public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends GenerateDefaultLayoutMethodParentLayout.WithLayout implements GeneratedModel<Object>, GenerateDefaultLayoutMethodParentLayout_WithLayoutBuilder {
   private OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$WithLayout_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<GenerateDefaultLayoutMethodParentLayout$WithLayout_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -79,8 +80,8 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(Number... ids) {
-    super.id(ids);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -91,21 +92,22 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(CharSequence key) {
-    super.id(key);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(CharSequence key,
-      CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@NonNull CharSequence arg0,
+      long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -165,10 +167,10 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
       return false;
     }
     GenerateDefaultLayoutMethodParentLayout$WithLayout_ that = (GenerateDefaultLayoutMethodParentLayout$WithLayout_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
     return true;

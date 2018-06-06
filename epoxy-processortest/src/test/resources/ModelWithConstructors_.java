@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -10,7 +11,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithConstructors_ extends ModelWithConstructors implements GeneratedModel<Object> {
+public class ModelWithConstructors_ extends ModelWithConstructors implements GeneratedModel<Object>, ModelWithConstructorsBuilder {
   private OnModelBoundListener<ModelWithConstructors_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithConstructors_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -34,7 +35,7 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -97,8 +98,8 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   }
 
   @Override
-  public ModelWithConstructors_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithConstructors_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -109,20 +110,20 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   }
 
   @Override
-  public ModelWithConstructors_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithConstructors_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithConstructors_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithConstructors_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithConstructors_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithConstructors_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -177,13 +178,13 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
       return false;
     }
     ModelWithConstructors_ that = (ModelWithConstructors_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (valueInt != that.valueInt) {
+    if ((valueInt != that.valueInt)) {
       return false;
     }
     return true;

@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -11,7 +12,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLayoutInViewModelAnnotationWorksView> implements GeneratedModel<RLayoutInViewModelAnnotationWorksView> {
+public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLayoutInViewModelAnnotationWorksView> implements GeneratedModel<RLayoutInViewModelAnnotationWorksView>, RLayoutInViewModelAnnotationWorksViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
 
   private OnModelBoundListener<RLayoutInViewModelAnnotationWorksViewModel_, RLayoutInViewModelAnnotationWorksView> onModelBoundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final RLayoutInViewModelAnnotationWorksView object, int position) {
+      final RLayoutInViewModelAnnotationWorksView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -94,8 +95,8 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(Number... ids) {
-    super.id(ids);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -106,21 +107,21 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(CharSequence key) {
-    super.id(key);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(CharSequence key,
-      CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -181,10 +182,10 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
       return false;
     }
     RLayoutInViewModelAnnotationWorksViewModel_ that = (RLayoutInViewModelAnnotationWorksViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
     return true;

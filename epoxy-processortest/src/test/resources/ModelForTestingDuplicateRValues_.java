@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.airbnb.epoxy.othermodule.R;
 import java.lang.CharSequence;
@@ -11,7 +12,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRValues implements GeneratedModel<Object> {
+public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRValues implements GeneratedModel<Object>, ModelForTestingDuplicateRValuesBuilder {
   private OnModelBoundListener<ModelForTestingDuplicateRValues_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelForTestingDuplicateRValues_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -27,7 +28,7 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -90,8 +91,8 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
   }
 
   @Override
-  public ModelForTestingDuplicateRValues_ id(Number... ids) {
-    super.id(ids);
+  public ModelForTestingDuplicateRValues_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -102,20 +103,21 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
   }
 
   @Override
-  public ModelForTestingDuplicateRValues_ id(CharSequence key) {
-    super.id(key);
+  public ModelForTestingDuplicateRValues_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelForTestingDuplicateRValues_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelForTestingDuplicateRValues_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelForTestingDuplicateRValues_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelForTestingDuplicateRValues_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -176,13 +178,13 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
       return false;
     }
     ModelForTestingDuplicateRValues_ that = (ModelForTestingDuplicateRValues_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (value != that.value) {
+    if ((value != that.value)) {
       return false;
     }
     return true;

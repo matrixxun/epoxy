@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalStateException;
@@ -12,7 +13,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel implements GeneratedModel<DataBindingEpoxyModel.DataBindingHolder> {
+public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel implements GeneratedModel<DataBindingEpoxyModel.DataBindingHolder>, ModelWithDataBindingBindingModelBuilder {
   private OnModelBoundListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> onModelUnboundListener_epoxyGeneratedModel;
@@ -27,7 +28,7 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final DataBindingEpoxyModel.DataBindingHolder object, int position) {
+      final DataBindingEpoxyModel.DataBindingHolder object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -90,8 +91,8 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
   }
 
   @Override
-  public ModelWithDataBindingBindingModel_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithDataBindingBindingModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -102,20 +103,21 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
   }
 
   @Override
-  public ModelWithDataBindingBindingModel_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithDataBindingBindingModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithDataBindingBindingModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithDataBindingBindingModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithDataBindingBindingModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithDataBindingBindingModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -169,7 +171,7 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
       return;
     }
     ModelWithDataBindingBindingModel_ that = (ModelWithDataBindingBindingModel_) previousModel;
-    if (stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null) {
+    if ((stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null)) {
       binding.setVariable(BR.stringValue, stringValue);
     }
   }
@@ -195,13 +197,13 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
       return false;
     }
     ModelWithDataBindingBindingModel_ that = (ModelWithDataBindingBindingModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null) {
+    if ((stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null)) {
       return false;
     }
     return true;

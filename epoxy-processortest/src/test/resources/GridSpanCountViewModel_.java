@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -13,7 +14,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> implements GeneratedModel<GridSpanCountView> {
+public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> implements GeneratedModel<GridSpanCountView>, GridSpanCountViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<GridSpanCountViewModel_, GridSpanCountView> onModelBoundListener_epoxyGeneratedModel;
@@ -22,6 +23,7 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private String clickListener_String;
 
   @Override
@@ -35,7 +37,7 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final GridSpanCountView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -54,7 +56,7 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
     GridSpanCountViewModel_ that = (GridSpanCountViewModel_) previousModel;
     super.bind(object);
 
-    if (clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null) {
+    if ((clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null)) {
       object.setClickListener(clickListener_String);
     }
   }
@@ -106,7 +108,7 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
    *
    * @see GridSpanCountView#setClickListener(String)
    */
-  public GridSpanCountViewModel_ clickListener(String clickListener) {
+  public GridSpanCountViewModel_ clickListener(@NonNull String clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -116,6 +118,7 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
     return this;
   }
 
+  @NonNull
   public String clickListener() {
     return clickListener_String;
   }
@@ -127,8 +130,8 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public GridSpanCountViewModel_ id(Number... ids) {
-    super.id(ids);
+  public GridSpanCountViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -139,20 +142,20 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public GridSpanCountViewModel_ id(CharSequence key) {
-    super.id(key);
+  public GridSpanCountViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public GridSpanCountViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public GridSpanCountViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public GridSpanCountViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public GridSpanCountViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -214,13 +217,13 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
       return false;
     }
     GridSpanCountViewModel_ that = (GridSpanCountViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null) {
+    if ((clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null)) {
       return false;
     }
     return true;

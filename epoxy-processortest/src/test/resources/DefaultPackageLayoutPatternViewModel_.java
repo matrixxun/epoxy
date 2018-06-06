@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -11,7 +12,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPackageLayoutPatternView> implements GeneratedModel<DefaultPackageLayoutPatternView> {
+public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPackageLayoutPatternView> implements GeneratedModel<DefaultPackageLayoutPatternView>, DefaultPackageLayoutPatternViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
 
   private OnModelBoundListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> onModelBoundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final DefaultPackageLayoutPatternView object, int position) {
+      final DefaultPackageLayoutPatternView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -94,8 +95,8 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(Number... ids) {
-    super.id(ids);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -106,20 +107,21 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(CharSequence key) {
-    super.id(key);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -180,10 +182,10 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
       return false;
     }
     DefaultPackageLayoutPatternViewModel_ that = (DefaultPackageLayoutPatternViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
     return true;

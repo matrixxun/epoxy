@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.models;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.airbnb.epoxy.EpoxyController;
 import com.airbnb.epoxy.EpoxyModel;
@@ -16,7 +17,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<Object> {
+public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<Object>, ModelWithIntDefBuilder {
   private OnModelBoundListener<ModelWithIntDef_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithIntDef_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -32,7 +33,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -96,8 +97,8 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   }
 
   @Override
-  public ModelWithIntDef_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithIntDef_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -108,20 +109,20 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithIntDef_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithIntDef_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithIntDef_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -176,13 +177,13 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
       return false;
     }
     ModelWithIntDef_ that = (ModelWithIntDef_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (type != that.type) {
+    if ((type != that.type)) {
       return false;
     }
     return true;

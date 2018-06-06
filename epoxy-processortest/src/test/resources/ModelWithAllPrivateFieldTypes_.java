@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.Boolean;
 import java.lang.Byte;
@@ -20,7 +21,7 @@ import java.util.List;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldTypes implements GeneratedModel<Object> {
+public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldTypes implements GeneratedModel<Object>, ModelWithAllPrivateFieldTypesBuilder {
   private OnModelBoundListener<ModelWithAllPrivateFieldTypes_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithAllPrivateFieldTypes_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -36,7 +37,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -305,8 +306,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithAllPrivateFieldTypes_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -317,20 +318,21 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithAllPrivateFieldTypes_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithAllPrivateFieldTypes_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithAllPrivateFieldTypes_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -405,58 +407,58 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
       return false;
     }
     ModelWithAllPrivateFieldTypes_ that = (ModelWithAllPrivateFieldTypes_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (getValueInt() != that.getValueInt()) {
+    if ((getValueInt() != that.getValueInt())) {
       return false;
     }
-    if (getValueInteger() != null ? !getValueInteger().equals(that.getValueInteger()) : that.getValueInteger() != null) {
+    if ((getValueInteger() != null ? !getValueInteger().equals(that.getValueInteger()) : that.getValueInteger() != null)) {
       return false;
     }
-    if (getValueShort() != that.getValueShort()) {
+    if ((getValueShort() != that.getValueShort())) {
       return false;
     }
-    if (getValueShortWrapper() != null ? !getValueShortWrapper().equals(that.getValueShortWrapper()) : that.getValueShortWrapper() != null) {
+    if ((getValueShortWrapper() != null ? !getValueShortWrapper().equals(that.getValueShortWrapper()) : that.getValueShortWrapper() != null)) {
       return false;
     }
-    if (getValueChar() != that.getValueChar()) {
+    if ((getValueChar() != that.getValueChar())) {
       return false;
     }
-    if (getValueCharacter() != null ? !getValueCharacter().equals(that.getValueCharacter()) : that.getValueCharacter() != null) {
+    if ((getValueCharacter() != null ? !getValueCharacter().equals(that.getValueCharacter()) : that.getValueCharacter() != null)) {
       return false;
     }
-    if (getValuebByte() != that.getValuebByte()) {
+    if ((getValuebByte() != that.getValuebByte())) {
       return false;
     }
-    if (getValueByteWrapper() != null ? !getValueByteWrapper().equals(that.getValueByteWrapper()) : that.getValueByteWrapper() != null) {
+    if ((getValueByteWrapper() != null ? !getValueByteWrapper().equals(that.getValueByteWrapper()) : that.getValueByteWrapper() != null)) {
       return false;
     }
-    if (getValueLong() != that.getValueLong()) {
+    if ((getValueLong() != that.getValueLong())) {
       return false;
     }
-    if (getValueLongWrapper() != null ? !getValueLongWrapper().equals(that.getValueLongWrapper()) : that.getValueLongWrapper() != null) {
+    if ((getValueLongWrapper() != null ? !getValueLongWrapper().equals(that.getValueLongWrapper()) : that.getValueLongWrapper() != null)) {
       return false;
     }
-    if (Double.compare(that.getValueDouble(), getValueDouble()) != 0) {
+    if ((Double.compare(that.getValueDouble(), getValueDouble()) != 0)) {
       return false;
     }
-    if (getValueDoubleWrapper() != null ? !getValueDoubleWrapper().equals(that.getValueDoubleWrapper()) : that.getValueDoubleWrapper() != null) {
+    if ((getValueDoubleWrapper() != null ? !getValueDoubleWrapper().equals(that.getValueDoubleWrapper()) : that.getValueDoubleWrapper() != null)) {
       return false;
     }
-    if (Float.compare(that.getValueFloat(), getValueFloat()) != 0) {
+    if ((Float.compare(that.getValueFloat(), getValueFloat()) != 0)) {
       return false;
     }
-    if (getValueFloatWrapper() != null ? !getValueFloatWrapper().equals(that.getValueFloatWrapper()) : that.getValueFloatWrapper() != null) {
+    if ((getValueFloatWrapper() != null ? !getValueFloatWrapper().equals(that.getValueFloatWrapper()) : that.getValueFloatWrapper() != null)) {
       return false;
     }
-    if (isValueBoolean() != that.isValueBoolean()) {
+    if ((isValueBoolean() != that.isValueBoolean())) {
       return false;
     }
-    if (getValueBooleanWrapper() != null ? !getValueBooleanWrapper().equals(that.getValueBooleanWrapper()) : that.getValueBooleanWrapper() != null) {
+    if ((getValueBooleanWrapper() != null ? !getValueBooleanWrapper().equals(that.getValueBooleanWrapper()) : that.getValueBooleanWrapper() != null)) {
       return false;
     }
     if (!Arrays.equals(getValueIntArray(), that.getValueIntArray())) {
@@ -465,13 +467,13 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     if (!Arrays.equals(getValueObjectArray(), that.getValueObjectArray())) {
       return false;
     }
-    if (getValueString() != null ? !getValueString().equals(that.getValueString()) : that.getValueString() != null) {
+    if ((getValueString() != null ? !getValueString().equals(that.getValueString()) : that.getValueString() != null)) {
       return false;
     }
-    if (getValueObject() != null ? !getValueObject().equals(that.getValueObject()) : that.getValueObject() != null) {
+    if ((getValueObject() != null ? !getValueObject().equals(that.getValueObject()) : that.getValueObject() != null)) {
       return false;
     }
-    if (getValueList() != null ? !getValueList().equals(that.getValueList()) : that.getValueList() != null) {
+    if ((getValueList() != null ? !getValueList().equals(that.getValueList()) : that.getValueList() != null)) {
       return false;
     }
     return true;

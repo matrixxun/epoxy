@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors implements GeneratedModel<Object> {
+public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors implements GeneratedModel<Object>, ModelWithVarargsConstructorsBuilder {
   private OnModelBoundListener<ModelWithVarargsConstructors_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithVarargsConstructors_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -31,7 +32,7 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -104,8 +105,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithVarargsConstructors_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -116,20 +117,21 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithVarargsConstructors_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithVarargsConstructors_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithVarargsConstructors_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -185,13 +187,13 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
       return false;
     }
     ModelWithVarargsConstructors_ that = (ModelWithVarargsConstructors_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (valueInt != that.valueInt) {
+    if ((valueInt != that.valueInt)) {
       return false;
     }
     if (!Arrays.equals(varargs, that.varargs)) {

@@ -1,3 +1,112 @@
+# 2.12.0 (April 18, 2018)
+
+- **Breaking** Several updates to the Paging Library integration were made (https://github.com/airbnb/epoxy/pull/421)
+    - The `PagingEpoxyController` class had the methods `setNumPagesToLoad` and `setPageSizeHint` removed
+    - Page hints are now taken from the `Config` object off of the PagedList. See the `setConfig` javadoc for information on how config values are used: https://github.com/airbnb/epoxy/blob/master/epoxy-paging/src/main/java/com/airbnb/epoxy/paging/PagingEpoxyController.java#L220
+    - Several tweaks were made to how the page size and prefetch distance affect model rebuilding. Take some time to make sure your config values make sense and produce good results for your use case
+    - A crash on empty list was fixed (https://github.com/airbnb/epoxy/issues/420)
+
+- **New** The [Paris](https://github.com/airbnb/paris) library is now officially supported to allow dynamically styling RecyclerView items though Epoxy models. See [the wiki](https://github.com/airbnb/epoxy/wiki/Paris-Integration-(Dynamic-Styling)) for more info.
+
+
+# 2.11.0 (April 7, 2018)
+
+- **Fix** Make databinding work with Android Studio 3.1 (https://github.com/airbnb/epoxy/pull/418)
+- Make `EpoxyController#isBuildingModels` public (https://github.com/airbnb/epoxy/pull/406
+
+
+# 2.10.0 (February 25, 2018)
+
+- **Improved** Allow the `Model_` class suffix for models generated via `@ModelView` to be customized (https://github.com/airbnb/epoxy/pull/402 Big thanks to geralt-encore!)
+
+# 2.9.0 (January 29, 2018)
+- **Improved** Global defaults for EpoxyController settings. Set duplicate filtering and exception handlers for all your controllers. (https://github.com/airbnb/epoxy/pull/394)
+- **Improved** Add `@NonNull` annotations in EpoxyModel for better Kotlin interop
+
+- **Fixed** Model click listeners now rebind correctly on partial model diffs (https://github.com/airbnb/epoxy/pull/393)
+- **Fixed** Update Android Paging library to fix placeholder support (Thanks @wkranich! https://github.com/airbnb/epoxy/pull/360)
+- **Fixed** Improve error message for inaccessible private fields (https://github.com/airbnb/epoxy/pull/388)
+
+# 2.8.0 (December 22, 2017)
+
+- **New** Use `@ModelProp` directly on fields to avoid creating a setter (https://github.com/airbnb/epoxy/pull/343)
+- **New** Set EpoxyRecyclerView item spacing via xml attribute (https://github.com/airbnb/epoxy/pull/364)
+- **New** More flexibility over setting Carousel padding values (https://github.com/airbnb/epoxy/pull/369)
+- **New** Allow custom EpoxyModelGroup root view (https://github.com/airbnb/epoxy/pull/370)
+
+- **Fixed** Public visibility settings of the Carousel snap helper settings (https://github.com/airbnb/epoxy/pull/356)
+- **Fixed** Add more nullability annotations to better support Kotlin
+- **Fixed** Saving view state now works better (https://github.com/airbnb/epoxy/pull/367)
+
+# 2.7.3 (November 21, 2017)
+
+- **Fixed** When a model changed and a partial update was bound to an existing view the wrong values could be set for prop groups (https://github.com/airbnb/epoxy/pull/347)
+
+# 2.7.2 (October 28, 2017)
+
+- **Fixed** Using `EpoxyDataBindingPattern` could result in the wrong package being used for the BR class in generated models.
+
+# 2.7.1 (October 24, 2017)
+Several fixes:
+
+- https://github.com/airbnb/epoxy/pull/332
+- https://github.com/airbnb/epoxy/pull/329
+- https://github.com/airbnb/epoxy/pull/330
+- https://github.com/airbnb/epoxy/pull/331
+
+# 2.7.0 (October 17, 2017)
+
+* **New** If a `@ModelView` generated model has a custom base class the generated model will now inherit constructors from the base class (https://github.com/airbnb/epoxy/pull/315)
+* **New** Use the `EpoxyDataBindingPattern` annotation to specify a naming pattern for databinding layouts. This removes the need to declare every databinding layout explicitly ([Wiki](https://github.com/airbnb/epoxy/wiki/Data-Binding-Support#automatic-based-on-naming-pattern) - https://github.com/airbnb/epoxy/pull/319)
+* **New** If a view with `@ModelView` implements an interface then the generated model will implement a similar interface, enabling polymorphism with models. [Wiki](https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations#view-interfaces)
+
+* **Improvement** `PagingEpoxyController` now has getters to access the underlying data lists (Thanks to @pcqpcq - https://github.com/airbnb/epoxy/pull/317)
+* **Improvement** `EpoxyModelGroup` now supports partial rebinds (https://github.com/airbnb/epoxy/pull/316)
+
+# 2.6.0 (October 10, 2017)
+* **Improvement** If a `OnModelClickListener` is used it will not be called if a view is clicked while it is being removed or otherwise has no position (https://github.com/airbnb/epoxy/issues/293 - Thanks @niccorder!)
+
+* **New** `EpoxyRecyclerView` and `Carousel` provide out of the box integration with Epoxy along with other enhancements over regular RecyclerView (https://github.com/airbnb/epoxy/wiki/EpoxyRecyclerView)
+* **New** `EpoxyPagingController` provides integration with the Android Paging architecture component as well as normal, large lists of items (https://github.com/airbnb/epoxy/wiki/Large-Data-Sets)
+
+#### Kotlin
+* **Improvement** Disable kotlin extension function generation with the annotation processor flag `disableEpoxyKotlinExtensionGeneration` (https://github.com/airbnb/epoxy/pull/309)
+* **Fix** If a model has a non empty constructor the generated extension function will now use it.
+
+
+# 2.5.1 (October 2, 2017)
+* **Fixed** The wrong import was being generated for models using a view holder in 2.5.0 (https://github.com/airbnb/epoxy/pull/294)
+* **Fixed** Fix generated code failing to compile if a subclass of View.OnClickListener is used as an attribute (https://github.com/airbnb/epoxy/pull/296)
+
+
+# 2.5.0 (September 14, 2017)
+* **New Feature** Epoxy now generates a Kotlin DSL to use when building models in your EpoxyController! See [the wiki](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#usage-with-kotlin) for details
+* **New Feature** You can use the `autoLayout` parameter in `@ModelView` instead of needing to create a layout resource for `defaultLayout`. Epoxy will then create your view programmatically (https://github.com/airbnb/epoxy/pull/282).
+
+**Breaking**
+* The `onSwipeProgressChanged` callback in `EpoxyTouchHelper` had a `Canvas` parameter added (https://github.com/airbnb/epoxy/pull/280). You will need to update any of your usages to add this. Sorry for the inconvenience; this will hopefully help you add better swipe animations.
+
+
+# 2.4.0 (September 4, 2017)
+* **Improvement** If you are setting options on a @ModelProp and have no other annotation parameters you can now omit the explicit `options = ` param name (https://github.com/airbnb/epoxy/pull/268)
+* **Improvement** If you are using `@TextProp` you can now specify a default string via a string resource (https://github.com/airbnb/epoxy/pull/269)
+
+* **Fixed** EpoxyModelGroup was not binding model click listeners correctly (https://github.com/airbnb/epoxy/pull/267)
+* **Fixed** A model created with @ModelView could fail to compile if it had nullable prop overloads  (https://github.com/airbnb/epoxy/pull/274)
+
+#### Potentially Breaking Fix
+A model created with @ModelView with a click listener had the wrong setter name for the model click listener overload (https://github.com/airbnb/epoxy/pull/275)
+
+If you were setting this you will need to update the setter name. If you were setting the click listener to null you may now have to cast it.
+
+
+# 2.3.0 (August 16, 2017)
+* **New** An `AfterPropsSet` annotation for use in `@ModelView` classes. This allows initialization work to be done after all properties are bound from the model. (https://github.com/airbnb/epoxy/pull/242)
+* **New** Annotations `TextProp` and `CallbackProp`  as convenient replacements for `ModelProp`. (https://github.com/airbnb/epoxy/pull/260)
+* **New** Easy support for dragging and swiping via the `EpoxyTouchHelper` class. https://github.com/airbnb/epoxy/wiki/Touch-Support
+* **Change** Added the method `getRootView` to the view holder class in `EpoxyModelGroup` and made the bind methods on `EpoxyModelGroup` non final. This allows access to the root view of the group.
+* **Change** Generated models will now inherit class annotations from the base class (https://github.com/airbnb/epoxy/pull/255 Thanks geralt-encore!)
+
 # 2.2.0 (June 19, 2017)
 * **Main Feature** Models can now be completely generated from a custom view via annotations on the view. This should completely remove the overhead of creating a model manually in many cases! For more info, see [the wiki](https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations)
 

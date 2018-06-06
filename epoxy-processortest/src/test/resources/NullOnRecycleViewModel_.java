@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -11,7 +12,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> implements GeneratedModel<NullOnRecycleView> {
+public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> implements GeneratedModel<NullOnRecycleView>, NullOnRecycleViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelBoundListener_epoxyGeneratedModel;
@@ -21,7 +22,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   /**
    * Bitset index: 0 */
   @Nullable
-  private CharSequence title_CharSequence = null;
+  private CharSequence title_CharSequence = (CharSequence) null;
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -31,7 +32,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final NullOnRecycleView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -50,7 +51,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     NullOnRecycleViewModel_ that = (NullOnRecycleViewModel_) previousModel;
     super.bind(object);
 
-    if (title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null) {
+    if ((title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null)) {
       object.setTitle(title_CharSequence);
     }
   }
@@ -82,7 +83,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
-    object.setTitle(null);
+    object.setTitle((CharSequence) null);
   }
 
   /**
@@ -99,7 +100,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see NullOnRecycleView#setTitle(CharSequence)
    */
@@ -122,8 +123,8 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(Number... ids) {
-    super.id(ids);
+  public NullOnRecycleViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -134,20 +135,20 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key) {
-    super.id(key);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -192,7 +193,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.title_CharSequence = null;
+    this.title_CharSequence = (CharSequence) null;
     super.reset();
     return this;
   }
@@ -209,13 +210,13 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
       return false;
     }
     NullOnRecycleViewModel_ that = (NullOnRecycleViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null) {
+    if ((title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null)) {
       return false;
     }
     return true;

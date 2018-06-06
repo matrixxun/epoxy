@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -10,7 +11,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithType_<T extends String> extends ModelWithType<T> implements GeneratedModel<Object> {
+public class ModelWithType_<T extends String> extends ModelWithType<T> implements GeneratedModel<Object>, ModelWithTypeBuilder<T> {
   private OnModelBoundListener<ModelWithType_<T>, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithType_<T>, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -89,8 +90,8 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
-  public ModelWithType_<T> id(Number... ids) {
-    super.id(ids);
+  public ModelWithType_<T> id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -101,20 +102,20 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
-  public ModelWithType_<T> id(CharSequence key) {
-    super.id(key);
+  public ModelWithType_<T> id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithType_<T> id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithType_<T> id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithType_<T> id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithType_<T> id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -169,13 +170,13 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
       return false;
     }
     ModelWithType_ that = (ModelWithType_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (value != that.value) {
+    if ((value != that.value)) {
       return false;
     }
     return true;

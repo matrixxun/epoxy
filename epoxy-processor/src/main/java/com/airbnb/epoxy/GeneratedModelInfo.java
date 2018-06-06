@@ -1,5 +1,8 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
+import com.airbnb.epoxy.ModelView.Size;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -7,6 +10,8 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterSpec.Builder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +37,8 @@ import static com.airbnb.epoxy.Utils.buildEpoxyException;
 
 abstract class GeneratedModelInfo {
   private static final String RESET_METHOD = "reset";
-  protected static final String GENERATED_CLASS_NAME_SUFFIX = "_";
+  public static final String GENERATED_CLASS_NAME_SUFFIX = "_";
+  public static final String GENERATED_MODEL_SUFFIX = "Model" + GENERATED_CLASS_NAME_SUFFIX;
 
   protected TypeName superClassName;
   protected TypeElement superClassElement;
@@ -51,6 +57,40 @@ abstract class GeneratedModelInfo {
   protected final List<ConstructorInfo> constructors = new ArrayList<>();
   protected final Set<MethodInfo> methodsReturningClassType = new LinkedHashSet<>();
   protected final List<AttributeGroup> attributeGroups = new ArrayList<>();
+  protected final List<AnnotationSpec> annotations = new ArrayList<>();
+
+  /**
+   * The info for the style builder if this is a model view annotated with @Styleable. Null
+   * otherwise.
+   */
+  private ParisStyleAttributeInfo styleBuilderInfo;
+
+  /**
+   * An option set via {@link ModelView#autoLayout()} to have Epoxy create the view programmatically
+   * instead of via xml layout resource inflation.
+   */
+  Size layoutParams = Size.NONE;
+
+  /**
+   * Get information about constructors of the original class so we can duplicate them in the
+   * generated class and call through to super with the proper parameters
+   */
+  protected static List<ConstructorInfo> getClassConstructors(TypeElement classElement) {
+    List<ConstructorInfo> constructors = new ArrayList<>(2);
+
+    for (Element subElement : classElement.getEnclosedElements()) {
+      if (subElement.getKind() == ElementKind.CONSTRUCTOR
+          && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
+
+        ExecutableElement constructor = ((ExecutableElement) subElement);
+        List<? extends VariableElement> params = constructor.getParameters();
+        constructors.add(new ConstructorInfo(subElement.getModifiers(), buildParamSpecs(params),
+            constructor.isVarArgs()));
+      }
+    }
+
+    return constructors;
+  }
 
   /**
    * Get information about methods returning class type of the original class so we can duplicate
@@ -83,7 +123,7 @@ abstract class GeneratedModelInfo {
     }
   }
 
-  protected List<ParameterSpec> buildParamSpecs(List<? extends VariableElement> params) {
+  protected static List<ParameterSpec> buildParamSpecs(List<? extends VariableElement> params) {
     List<ParameterSpec> result = new ArrayList<>();
 
     for (VariableElement param : params) {
@@ -136,16 +176,8 @@ abstract class GeneratedModelInfo {
     }
   }
 
-  TypeElement getSuperClassElement() {
-    return superClassElement;
-  }
-
   TypeName getSuperClassName() {
     return superClassName;
-  }
-
-  List<ConstructorInfo> getConstructors() {
-    return constructors;
   }
 
   Set<MethodInfo> getMethodsReturningClassType() {
@@ -158,10 +190,6 @@ abstract class GeneratedModelInfo {
 
   List<AttributeInfo> getAttributeInfo() {
     return attributeInfo;
-  }
-
-  boolean shouldGenerateModel() {
-    return shouldGenerateModel;
   }
 
   Iterable<TypeVariableName> getTypeVariables() {
@@ -177,6 +205,29 @@ abstract class GeneratedModelInfo {
    */
   TypeName getModelType() {
     return boundObjectTypeName;
+  }
+
+  List<AnnotationSpec> getAnnotations() {
+    return annotations;
+  }
+
+  @Nullable
+  ParisStyleAttributeInfo getStyleBuilderInfo() {
+    return styleBuilderInfo;
+  }
+
+  boolean isStyleable() {
+    return getStyleBuilderInfo() != null;
+  }
+
+  void setStyleable(
+      @NotNull ParisStyleAttributeInfo parisStyleAttributeInfo) {
+    styleBuilderInfo = parisStyleAttributeInfo;
+    addAttribute(parisStyleAttributeInfo);
+  }
+
+  boolean isProgrammaticView() {
+    return isStyleable() || layoutParams != Size.NONE;
   }
 
   static class ConstructorInfo {

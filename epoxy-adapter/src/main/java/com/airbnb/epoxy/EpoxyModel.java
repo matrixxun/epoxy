@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,7 @@ public abstract class EpoxyModel<T> {
   private boolean currentlyInInterceptors;
   private int hashCodeWhenAdded;
   private boolean hasDefaultId;
-  private SpanSizeOverrideCallback spanSizeOverride;
+  @Nullable private SpanSizeOverrideCallback spanSizeOverride;
 
   protected EpoxyModel(long id) {
     id(id);
@@ -68,15 +69,21 @@ public abstract class EpoxyModel<T> {
 
   /**
    * Get the view type to associate with this model in the recyclerview. For models that use a
-   * layout resource, the view type is simply the layout resource value.
+   * layout resource, the view type is simply the layout resource value by default.
+   * <p>
+   * If this returns 0 Epoxy will assign a unique view type for this model at run time.
    *
    * @see android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)
    */
-  int getViewType() {
+  protected int getViewType() {
     return getLayout();
   }
 
-  View buildView(ViewGroup parent) {
+  /**
+   * Create and return a new instance of a view for this model. By default a view is created by
+   * inflating the layout resource.
+   */
+  protected View buildView(@NonNull ViewGroup parent) {
     return LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
   }
 
@@ -84,7 +91,7 @@ public abstract class EpoxyModel<T> {
    * Binds the current data to the given view. You should bind all fields including unset/empty
    * fields to ensure proper recycling.
    */
-  public void bind(T view) {
+  public void bind(@NonNull T view) {
 
   }
 
@@ -96,7 +103,7 @@ public abstract class EpoxyModel<T> {
    * then {@link #bind(Object)} is called instead. This will only be used if the model is used with
    * an {@link EpoxyAdapter}
    */
-  public void bind(T view, List<Object> payloads) {
+  public void bind(@NonNull T view, @NonNull List<Object> payloads) {
     bind(view);
   }
 
@@ -131,7 +138,7 @@ public abstract class EpoxyModel<T> {
    *                             process, and follows the same general conditions for all
    *                             recyclerview change payloads.
    */
-  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {
+  public void bind(@NonNull T view, @NonNull EpoxyModel<?> previouslyBoundModel) {
     bind(view);
   }
 
@@ -145,7 +152,7 @@ public abstract class EpoxyModel<T> {
    *
    * @see EpoxyAdapter#onViewRecycled(EpoxyViewHolder)
    */
-  public void unbind(T view) {
+  public void unbind(@NonNull T view) {
   }
 
   public long id() {
@@ -174,7 +181,7 @@ public abstract class EpoxyModel<T> {
    * <p>
    * This hashes the numbers, so there is a tiny risk of collision with other ids.
    */
-  public EpoxyModel<T> id(Number... ids) {
+  public EpoxyModel<T> id(@NonNull Number... ids) {
     long result = 0;
     for (Number id : ids) {
       result = 31 * result + hashLong64Bit(id.hashCode());
@@ -206,7 +213,7 @@ public abstract class EpoxyModel<T> {
    *
    * @see EpoxyModel#hashString64Bit(CharSequence)
    */
-  public EpoxyModel<T> id(CharSequence key) {
+  public EpoxyModel<T> id(@NonNull CharSequence key) {
     id(hashString64Bit(key));
     return this;
   }
@@ -216,7 +223,7 @@ public abstract class EpoxyModel<T> {
    * <p>
    * Similar to {@link #id(CharSequence)}, but with additional strings.
    */
-  public EpoxyModel<T> id(CharSequence key, CharSequence... otherKeys) {
+  public EpoxyModel<T> id(@NonNull CharSequence key, @NonNull CharSequence... otherKeys) {
     long result = hashString64Bit(key);
     for (CharSequence otherKey : otherKeys) {
       result = 31 * result + hashString64Bit(otherKey);
@@ -236,7 +243,7 @@ public abstract class EpoxyModel<T> {
    * @see EpoxyModel#hashString64Bit(CharSequence)
    * @see EpoxyModel#hashLong64Bit(long)
    */
-  public EpoxyModel<T> id(CharSequence key, long id) {
+  public EpoxyModel<T> id(@NonNull CharSequence key, long id) {
     long result = hashString64Bit(key);
     result = 31 * result + hashLong64Bit(id);
     id(result);
@@ -267,7 +274,7 @@ public abstract class EpoxyModel<T> {
    * <p>
    * Hash implementation from http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-1a
    */
-  private static long hashString64Bit(CharSequence str) {
+  private static long hashString64Bit(@NonNull CharSequence str) {
     long result = 0xcbf29ce484222325L;
     final int len = str.length();
     for (int i = 0; i < len; i++) {
@@ -277,9 +284,21 @@ public abstract class EpoxyModel<T> {
     return result;
   }
 
+  /**
+   * Return the default layout resource to be used when creating views for this model. The resource
+   * will be inflated to create a view for the model; additionally the layout int is used as the
+   * views type in the RecyclerView.
+   * <p>
+   * This can be left unimplemented if you use the {@link EpoxyModelClass} annotation to define a
+   * layout.
+   * <p>
+   * This default value can be overridden with {@link #layout(int)} at runtime to change the layout
+   * dynamically.
+   */
   @LayoutRes
   protected abstract int getDefaultLayout();
 
+  @NonNull
   public EpoxyModel<T> layout(@LayoutRes int layoutRes) {
     onMutation();
     layout = layoutRes;
@@ -298,6 +317,7 @@ public abstract class EpoxyModel<T> {
   /**
    * Sets fields of the model to default ones.
    */
+  @NonNull
   public EpoxyModel<T> reset() {
     onMutation();
 
@@ -311,7 +331,7 @@ public abstract class EpoxyModel<T> {
    * Add this model to the given controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  public void addTo(EpoxyController controller) {
+  public void addTo(@NonNull EpoxyController controller) {
     controller.addInternal(this);
   }
 
@@ -319,7 +339,7 @@ public abstract class EpoxyModel<T> {
    * Add this model to the given controller if the condition is true. Can only be called from inside
    * {@link EpoxyController#buildModels()}.
    */
-  public void addIf(boolean condition, EpoxyController controller) {
+  public void addIf(boolean condition, @NonNull EpoxyController controller) {
     if (condition) {
       addTo(controller);
     } else if (controllerToStageTo != null) {
@@ -335,7 +355,7 @@ public abstract class EpoxyModel<T> {
    * Add this model to the given controller if the {@link AddPredicate} return true. Can only be
    * called from inside {@link EpoxyController#buildModels()}.
    */
-  public void addIf(AddPredicate predicate, EpoxyController controller) {
+  public void addIf(@NonNull AddPredicate predicate, @NonNull EpoxyController controller) {
     addIf(predicate.addIf(), controller);
   }
 
@@ -350,7 +370,7 @@ public abstract class EpoxyModel<T> {
    * This is used internally by generated models to turn on validation checking when
    * "validateEpoxyModelUsage" is enabled and the model is used with an {@link EpoxyController}.
    */
-  protected final void addWithDebugValidation(EpoxyController controller) {
+  protected final void addWithDebugValidation(@NonNull EpoxyController controller) {
     if (controller == null) {
       throw new IllegalArgumentException("Controller cannot be null");
     }
@@ -415,7 +435,8 @@ public abstract class EpoxyModel<T> {
     }
   }
 
-  private static int getPosition(EpoxyController controller, EpoxyModel<?> model) {
+  private static int getPosition(@NonNull EpoxyController controller,
+      @NonNull EpoxyModel<?> model) {
     // If the model was added to multiple controllers, or was removed from the controller and then
     // modified, this won't be correct. But those should be very rare cases that we don't need to
     // worry about
@@ -506,6 +527,7 @@ public abstract class EpoxyModel<T> {
    * used in {@link EpoxyAdapter} or a {@link EpoxyModelGroup}, but is not supported in {@link
    * EpoxyController}
    */
+  @NonNull
   public EpoxyModel<T> show() {
     return show(true);
   }
@@ -515,6 +537,7 @@ public abstract class EpoxyModel<T> {
    * used in {@link EpoxyAdapter} or a {@link EpoxyModelGroup}, but is not supported in {@link
    * EpoxyController}
    */
+  @NonNull
   public EpoxyModel<T> show(boolean show) {
     onMutation();
     shown = show;
@@ -526,6 +549,7 @@ public abstract class EpoxyModel<T> {
    * used in {@link EpoxyAdapter} or a {@link EpoxyModelGroup}, but is not supported in {@link
    * EpoxyController}
    */
+  @NonNull
   public EpoxyModel<T> hide() {
     return show(false);
   }
@@ -554,7 +578,7 @@ public abstract class EpoxyModel<T> {
    * @return True if the View should be recycled, false otherwise
    * @see EpoxyAdapter#onFailedToRecycleView(android.support.v7.widget.RecyclerView.ViewHolder)
    */
-  public boolean onFailedToRecycleView(T view) {
+  public boolean onFailedToRecycleView(@NonNull T view) {
     return false;
   }
 
@@ -563,7 +587,7 @@ public abstract class EpoxyModel<T> {
    *
    * @see EpoxyAdapter#onViewAttachedToWindow(android.support.v7.widget.RecyclerView.ViewHolder)
    */
-  public void onViewAttachedToWindow(T view) {
+  public void onViewAttachedToWindow(@NonNull T view) {
 
   }
 
@@ -572,7 +596,7 @@ public abstract class EpoxyModel<T> {
    *
    * @see EpoxyAdapter#onViewDetachedFromWindow(android.support.v7.widget.RecyclerView.ViewHolder)
    */
-  public void onViewDetachedFromWindow(T view) {
+  public void onViewDetachedFromWindow(@NonNull T view) {
 
   }
 

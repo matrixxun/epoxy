@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -11,7 +12,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> implements GeneratedModel<LayoutOverloadsView> {
+public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> implements GeneratedModel<LayoutOverloadsView>, LayoutOverloadsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
 
   private OnModelBoundListener<LayoutOverloadsViewModel_, LayoutOverloadsView> onModelBoundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final LayoutOverloadsView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -94,8 +95,8 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
   }
 
   @Override
-  public LayoutOverloadsViewModel_ id(Number... ids) {
-    super.id(ids);
+  public LayoutOverloadsViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -106,20 +107,20 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
   }
 
   @Override
-  public LayoutOverloadsViewModel_ id(CharSequence key) {
-    super.id(key);
+  public LayoutOverloadsViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public LayoutOverloadsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public LayoutOverloadsViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public LayoutOverloadsViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public LayoutOverloadsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -190,10 +191,10 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
       return false;
     }
     LayoutOverloadsViewModel_ that = (LayoutOverloadsViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
     return true;

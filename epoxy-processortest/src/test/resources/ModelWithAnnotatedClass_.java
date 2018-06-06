@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -10,7 +11,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements GeneratedModel<Object> {
+public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements GeneratedModel<Object>, ModelWithAnnotatedClassBuilder {
   private OnModelBoundListener<ModelWithAnnotatedClass_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithAnnotatedClass_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -79,8 +80,8 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements
   }
 
   @Override
-  public ModelWithAnnotatedClass_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithAnnotatedClass_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -91,20 +92,20 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements
   }
 
   @Override
-  public ModelWithAnnotatedClass_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithAnnotatedClass_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithAnnotatedClass_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithAnnotatedClass_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithAnnotatedClass_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithAnnotatedClass_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -158,10 +159,10 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements
       return false;
     }
     ModelWithAnnotatedClass_ that = (ModelWithAnnotatedClass_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
     return true;

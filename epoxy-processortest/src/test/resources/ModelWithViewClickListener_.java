@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import java.lang.CharSequence;
@@ -11,7 +12,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithViewClickListener_ extends ModelWithViewClickListener implements GeneratedModel<Object> {
+public class ModelWithViewClickListener_ extends ModelWithViewClickListener implements GeneratedModel<Object>, ModelWithViewClickListenerBuilder {
   private OnModelBoundListener<ModelWithViewClickListener_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithViewClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -27,11 +28,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -84,7 +82,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
       super.clickListener = null;
     }
     else {
-      super.clickListener = new WrappedEpoxyModelClickListener(this, clickListener);
+      super.clickListener = new WrappedEpoxyModelClickListener(clickListener);
     }
     return this;
   }
@@ -106,8 +104,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   @Override
-  public ModelWithViewClickListener_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithViewClickListener_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -118,20 +116,20 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   @Override
-  public ModelWithViewClickListener_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithViewClickListener_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithViewClickListener_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithViewClickListener_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -186,13 +184,13 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
       return false;
     }
     ModelWithViewClickListener_ that = (ModelWithViewClickListener_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((clickListener == null) != (that.clickListener == null)) {
+    if (((clickListener == null) != (that.clickListener == null))) {
       return false;
     }
     return true;

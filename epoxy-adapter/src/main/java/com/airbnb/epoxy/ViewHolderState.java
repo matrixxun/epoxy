@@ -32,7 +32,7 @@ import java.util.Collection;
  */
 @SuppressWarnings("WeakerAccess")
 class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
-  public ViewHolderState() {
+  ViewHolderState() {
   }
 
   private ViewHolderState(int size) {
@@ -114,6 +114,10 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
     ViewState state = get(holder.getItemId());
     if (state != null) {
       state.restore(holder.itemView);
+    } else {
+      // The first time a model is bound it won't have previous state. We need to make sure
+      // the view is reset to its initial state to clear any changes from previously bound models
+      holder.restoreInitialViewState();
     }
   }
 
@@ -123,7 +127,7 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
    */
   public static class ViewState extends SparseArray<Parcelable> implements Parcelable {
 
-    public ViewState() {
+    ViewState() {
     }
 
     private ViewState(int size, int[] keys, Parcelable[] values) {

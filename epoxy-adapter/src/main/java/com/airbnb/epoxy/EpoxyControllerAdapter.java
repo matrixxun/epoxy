@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
@@ -10,20 +11,21 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   private final DiffHelper diffHelper = new DiffHelper(this, true);
   private final NotifyBlocker notifyBlocker = new NotifyBlocker();
   private final EpoxyController epoxyController;
-  private List<EpoxyModel<?>> currentModels = Collections.emptyList();
+  private ControllerModelList currentModels = new ControllerModelList(20);
   private List<EpoxyModel<?>> copyOfCurrentModels;
   private int itemCount;
 
-  EpoxyControllerAdapter(EpoxyController epoxyController) {
+  EpoxyControllerAdapter(@NonNull EpoxyController epoxyController) {
     this.epoxyController = epoxyController;
     registerAdapterDataObserver(notifyBlocker);
   }
 
   @Override
-  protected void onExceptionSwallowed(RuntimeException exception) {
+  protected void onExceptionSwallowed(@NonNull RuntimeException exception) {
     epoxyController.onExceptionSwallowed(exception);
   }
 
+  @NonNull
   @Override
   List<EpoxyModel<?>> getCurrentModels() {
     return currentModels;
@@ -37,7 +39,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     return itemCount;
   }
 
-  void setModels(List<EpoxyModel<?>> models) {
+  void setModels(@NonNull ControllerModelList models) {
     itemCount = models.size();
     copyOfCurrentModels = null;
     this.currentModels = models;
@@ -52,47 +54,53 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   }
 
   @Override
-  public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+  public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
     epoxyController.onAttachedToRecyclerViewInternal(recyclerView);
   }
 
   @Override
-  public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+  public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
     epoxyController.onDetachedFromRecyclerViewInternal(recyclerView);
   }
 
   @Override
-  public void onViewAttachedToWindow(EpoxyViewHolder holder) {
+  public void onViewAttachedToWindow(@NonNull EpoxyViewHolder holder) {
     super.onViewAttachedToWindow(holder);
     epoxyController.onViewAttachedToWindow(holder, holder.getModel());
   }
 
   @Override
-  public void onViewDetachedFromWindow(EpoxyViewHolder holder) {
+  public void onViewDetachedFromWindow(@NonNull EpoxyViewHolder holder) {
     super.onViewDetachedFromWindow(holder);
     epoxyController.onViewDetachedFromWindow(holder, holder.getModel());
   }
 
   @Override
-  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position,
-      @Nullable EpoxyModel<?> previouslyBoundModel) {
+  protected void onModelBound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> model,
+      int position, @Nullable EpoxyModel<?> previouslyBoundModel) {
     epoxyController.onModelBound(holder, model, position, previouslyBoundModel);
   }
 
   @Override
-  protected void onModelUnbound(EpoxyViewHolder holder, EpoxyModel<?> model) {
+  protected void onModelUnbound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> model) {
     epoxyController.onModelUnbound(holder, model);
   }
 
   /** Get an unmodifiable copy of the current models set on the adapter. */
+  @NonNull
   public List<EpoxyModel<?>> getCopyOfModels() {
     if (copyOfCurrentModels == null) {
-      copyOfCurrentModels = new UnmodifiableList<>(currentModels);
+      copyOfCurrentModels = Collections.unmodifiableList(currentModels);
     }
 
     return copyOfCurrentModels;
   }
 
+  /**
+   * @throws IndexOutOfBoundsException If the given position is out of range of the current model
+   *                                   list.
+   */
+  @NonNull
   public EpoxyModel<?> getModelAtPosition(int position) {
     return currentModels.get(position);
   }
@@ -113,7 +121,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   }
 
   @Override
-  public int getModelPosition(EpoxyModel<?> targetModel) {
+  public int getModelPosition(@NonNull EpoxyModel<?> targetModel) {
     int size = currentModels.size();
     for (int i = 0; i < size; i++) {
       EpoxyModel<?> model = currentModels.get(i);
@@ -125,8 +133,21 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     return -1;
   }
 
+  @NonNull
   @Override
   public BoundViewHolders getBoundViewHolders() {
     return super.getBoundViewHolders();
+  }
+
+  void moveModel(int fromPosition, int toPosition) {
+    copyOfCurrentModels = null;
+
+    currentModels.pauseNotifications();
+    currentModels.add(toPosition, currentModels.remove(fromPosition));
+    currentModels.resumeNotifications();
+
+    notifyBlocker.allowChanges();
+    notifyItemMoved(fromPosition, toPosition);
+    notifyBlocker.blockChanges();
   }
 }

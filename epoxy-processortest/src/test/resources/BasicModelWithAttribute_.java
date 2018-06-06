@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -10,7 +11,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements GeneratedModel<Object> {
+public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements GeneratedModel<Object>, BasicModelWithAttributeBuilder {
   private OnModelBoundListener<BasicModelWithAttribute_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<BasicModelWithAttribute_, Object> onModelUnboundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -89,8 +90,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
   }
 
   @Override
-  public BasicModelWithAttribute_ id(Number... ids) {
-    super.id(ids);
+  public BasicModelWithAttribute_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -101,20 +102,20 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
   }
 
   @Override
-  public BasicModelWithAttribute_ id(CharSequence key) {
-    super.id(key);
+  public BasicModelWithAttribute_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public BasicModelWithAttribute_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public BasicModelWithAttribute_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -169,13 +170,13 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
       return false;
     }
     BasicModelWithAttribute_ that = (BasicModelWithAttribute_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (value != that.value) {
+    if ((value != that.value)) {
       return false;
     }
     return true;

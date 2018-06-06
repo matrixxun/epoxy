@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -13,7 +14,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements GeneratedModel<SavedStateView> {
+public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements GeneratedModel<SavedStateView>, SavedStateViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<SavedStateViewModel_, SavedStateView> onModelBoundListener_epoxyGeneratedModel;
@@ -22,6 +23,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private String clickListener_String;
 
   @Override
@@ -35,7 +37,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final SavedStateView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -54,7 +56,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
     SavedStateViewModel_ that = (SavedStateViewModel_) previousModel;
     super.bind(object);
 
-    if (clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null) {
+    if ((clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null)) {
       object.setClickListener(clickListener_String);
     }
   }
@@ -106,7 +108,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
    *
    * @see SavedStateView#setClickListener(String)
    */
-  public SavedStateViewModel_ clickListener(String clickListener) {
+  public SavedStateViewModel_ clickListener(@NonNull String clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -116,6 +118,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
     return this;
   }
 
+  @NonNull
   public String clickListener() {
     return clickListener_String;
   }
@@ -127,8 +130,8 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
   }
 
   @Override
-  public SavedStateViewModel_ id(Number... ids) {
-    super.id(ids);
+  public SavedStateViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -139,20 +142,20 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
   }
 
   @Override
-  public SavedStateViewModel_ id(CharSequence key) {
-    super.id(key);
+  public SavedStateViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public SavedStateViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public SavedStateViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public SavedStateViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public SavedStateViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -214,13 +217,13 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
       return false;
     }
     SavedStateViewModel_ that = (SavedStateViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null) {
+    if ((clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null)) {
       return false;
     }
     return true;

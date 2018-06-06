@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import java.lang.CharSequence;
@@ -14,7 +15,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHashCodeView> implements GeneratedModel<IgnoreRequireHashCodeView> {
+public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHashCodeView> implements GeneratedModel<IgnoreRequireHashCodeView>, IgnoreRequireHashCodeViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> onModelBoundListener_epoxyGeneratedModel;
@@ -23,6 +24,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private View.OnClickListener clickListener_OnClickListener;
 
   @Override
@@ -36,11 +38,8 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final IgnoreRequireHashCodeView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener_OnClickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener_OnClickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -58,7 +57,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
     IgnoreRequireHashCodeViewModel_ that = (IgnoreRequireHashCodeViewModel_) previousModel;
     super.bind(object);
 
-    if (clickListener_OnClickListener != null ? !clickListener_OnClickListener.equals(that.clickListener_OnClickListener) : that.clickListener_OnClickListener != null) {
+    if ((clickListener_OnClickListener != null ? !clickListener_OnClickListener.equals(that.clickListener_OnClickListener) : that.clickListener_OnClickListener != null)) {
       object.setClickListener(clickListener_OnClickListener);
     }
   }
@@ -107,14 +106,15 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public IgnoreRequireHashCodeViewModel_ clickListener_OnClickListener(final OnModelClickListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> clickListener_OnClickListener) {
+  @NonNull
+  public IgnoreRequireHashCodeViewModel_ clickListener(final OnModelClickListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
-    if (clickListener_OnClickListener == null) {
+    if (clickListener == null) {
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(this, clickListener_OnClickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
     }
     return this;
   }
@@ -124,7 +124,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
    *
    * @see IgnoreRequireHashCodeView#setClickListener(View.OnClickListener)
    */
-  public IgnoreRequireHashCodeViewModel_ clickListener(View.OnClickListener clickListener) {
+  public IgnoreRequireHashCodeViewModel_ clickListener(@NonNull View.OnClickListener clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -134,6 +134,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
     return this;
   }
 
+  @NonNull
   public View.OnClickListener clickListener() {
     return clickListener_OnClickListener;
   }
@@ -145,8 +146,8 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
   }
 
   @Override
-  public IgnoreRequireHashCodeViewModel_ id(Number... ids) {
-    super.id(ids);
+  public IgnoreRequireHashCodeViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -157,20 +158,21 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
   }
 
   @Override
-  public IgnoreRequireHashCodeViewModel_ id(CharSequence key) {
-    super.id(key);
+  public IgnoreRequireHashCodeViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public IgnoreRequireHashCodeViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public IgnoreRequireHashCodeViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public IgnoreRequireHashCodeViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public IgnoreRequireHashCodeViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -232,13 +234,13 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
       return false;
     }
     IgnoreRequireHashCodeViewModel_ that = (IgnoreRequireHashCodeViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (clickListener_OnClickListener != null ? !clickListener_OnClickListener.equals(that.clickListener_OnClickListener) : that.clickListener_OnClickListener != null) {
+    if ((clickListener_OnClickListener != null ? !clickListener_OnClickListener.equals(that.clickListener_OnClickListener) : that.clickListener_OnClickListener != null)) {
       return false;
     }
     return true;

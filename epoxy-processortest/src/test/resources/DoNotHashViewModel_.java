@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import java.lang.CharSequence;
@@ -14,7 +15,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements GeneratedModel<DoNotHashView> {
+public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements GeneratedModel<DoNotHashView>, DoNotHashViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(3);
 
   private OnModelBoundListener<DoNotHashViewModel_, DoNotHashView> onModelBoundListener_epoxyGeneratedModel;
@@ -23,14 +24,17 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private CharSequence title_CharSequence;
 
   /**
    * Bitset index: 1 */
+  @NonNull
   private View.OnClickListener clickListener_OnClickListener;
 
   /**
    * Bitset index: 2 */
+  @NonNull
   private CharSequence normalProp_CharSequence;
 
   @Override
@@ -50,11 +54,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final DoNotHashView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener_OnClickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener_OnClickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -74,15 +75,15 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     DoNotHashViewModel_ that = (DoNotHashViewModel_) previousModel;
     super.bind(object);
 
-    if ((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null)) {
+    if (((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null))) {
       object.setClickListener(clickListener_OnClickListener);
     }
 
-    if ((title_CharSequence == null) != (that.title_CharSequence == null)) {
+    if (((title_CharSequence == null) != (that.title_CharSequence == null))) {
       object.setTitle(title_CharSequence);
     }
 
-    if (normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null) {
+    if ((normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null)) {
       object.normalProp(normalProp_CharSequence);
     }
   }
@@ -134,7 +135,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    *
    * @see DoNotHashView#setTitle(CharSequence)
    */
-  public DoNotHashViewModel_ title(CharSequence title) {
+  public DoNotHashViewModel_ title(@NonNull CharSequence title) {
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
     }
@@ -144,20 +145,22 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return this;
   }
 
+  @NonNull
   public CharSequence title() {
     return title_CharSequence;
   }
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public DoNotHashViewModel_ clickListener_OnClickListener(final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener_OnClickListener) {
+  @NonNull
+  public DoNotHashViewModel_ clickListener(final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
-    if (clickListener_OnClickListener == null) {
+    if (clickListener == null) {
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(this, clickListener_OnClickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
     }
     return this;
   }
@@ -167,7 +170,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    *
    * @see DoNotHashView#setClickListener(View.OnClickListener)
    */
-  public DoNotHashViewModel_ clickListener(View.OnClickListener clickListener) {
+  public DoNotHashViewModel_ clickListener(@NonNull View.OnClickListener clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -177,6 +180,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return this;
   }
 
+  @NonNull
   public View.OnClickListener clickListener() {
     return clickListener_OnClickListener;
   }
@@ -186,7 +190,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    *
    * @see DoNotHashView#normalProp(CharSequence)
    */
-  public DoNotHashViewModel_ normalProp(CharSequence normalProp) {
+  public DoNotHashViewModel_ normalProp(@NonNull CharSequence normalProp) {
     if (normalProp == null) {
       throw new IllegalArgumentException("normalProp cannot be null");
     }
@@ -196,6 +200,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return this;
   }
 
+  @NonNull
   public CharSequence normalProp() {
     return normalProp_CharSequence;
   }
@@ -207,8 +212,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public DoNotHashViewModel_ id(Number... ids) {
-    super.id(ids);
+  public DoNotHashViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -219,20 +224,20 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public DoNotHashViewModel_ id(CharSequence key) {
-    super.id(key);
+  public DoNotHashViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public DoNotHashViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public DoNotHashViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -296,19 +301,19 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
       return false;
     }
     DoNotHashViewModel_ that = (DoNotHashViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((title_CharSequence == null) != (that.title_CharSequence == null)) {
+    if (((title_CharSequence == null) != (that.title_CharSequence == null))) {
       return false;
     }
-    if ((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null)) {
+    if (((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null))) {
       return false;
     }
-    if (normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null) {
+    if ((normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null)) {
       return false;
     }
     return true;

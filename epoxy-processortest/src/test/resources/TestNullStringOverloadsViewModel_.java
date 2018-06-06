@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -14,7 +15,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullStringOverloadsView> implements GeneratedModel<TestNullStringOverloadsView> {
+public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullStringOverloadsView> implements GeneratedModel<TestNullStringOverloadsView>, TestNullStringOverloadsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<TestNullStringOverloadsViewModel_, TestNullStringOverloadsView> onModelBoundListener_epoxyGeneratedModel;
@@ -23,7 +24,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
 
   /**
    * Bitset index: 0 */
-  private StringAttributeData title_StringAttributeData =  new StringAttributeData(null);
+  private StringAttributeData title_StringAttributeData =  new StringAttributeData((CharSequence) null);
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -33,7 +34,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final TestNullStringOverloadsView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -52,7 +53,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     TestNullStringOverloadsViewModel_ that = (TestNullStringOverloadsViewModel_) previousModel;
     super.bind(object);
 
-    if (!title_StringAttributeData.equals(that.title_StringAttributeData)) {
+    if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       object.setTitle(title_StringAttributeData.toString(object.getContext()));
     }
   }
@@ -105,7 +106,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -119,7 +120,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -133,7 +134,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -147,7 +148,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -166,8 +167,8 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestNullStringOverloadsViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -178,20 +179,21 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -236,7 +238,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.title_StringAttributeData =  new StringAttributeData(null);
+    this.title_StringAttributeData =  new StringAttributeData((CharSequence) null);
     super.reset();
     return this;
   }
@@ -253,13 +255,13 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
       return false;
     }
     TestNullStringOverloadsViewModel_ that = (TestNullStringOverloadsViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
+    if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       return false;
     }
     return true;

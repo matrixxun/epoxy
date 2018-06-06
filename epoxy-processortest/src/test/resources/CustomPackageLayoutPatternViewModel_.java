@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -11,7 +12,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPackageLayoutPatternView> implements GeneratedModel<CustomPackageLayoutPatternView> {
+public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPackageLayoutPatternView> implements GeneratedModel<CustomPackageLayoutPatternView>, CustomPackageLayoutPatternViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
 
   private OnModelBoundListener<CustomPackageLayoutPatternViewModel_, CustomPackageLayoutPatternView> onModelBoundListener_epoxyGeneratedModel;
@@ -26,7 +27,7 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final CustomPackageLayoutPatternView object, int position) {
+      final CustomPackageLayoutPatternView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
@@ -94,8 +95,8 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
   }
 
   @Override
-  public CustomPackageLayoutPatternViewModel_ id(Number... ids) {
-    super.id(ids);
+  public CustomPackageLayoutPatternViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -106,20 +107,21 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
   }
 
   @Override
-  public CustomPackageLayoutPatternViewModel_ id(CharSequence key) {
-    super.id(key);
+  public CustomPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public CustomPackageLayoutPatternViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public CustomPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public CustomPackageLayoutPatternViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public CustomPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
@@ -180,10 +182,10 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
       return false;
     }
     CustomPackageLayoutPatternViewModel_ that = (CustomPackageLayoutPatternViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
     return true;

@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.KotlinUtilsKt.getParentClassElement;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -84,30 +85,9 @@ class Utils {
     }
   }
 
-  static TypeMirror getTypeMirror(ClassName className, Elements elements, Types types) {
-    Element classElement = getElementByName(className, elements, types);
-    if (classElement == null) {
-      throw new IllegalArgumentException("Unknown class: " + className);
-    }
-
-    return classElement.asType();
-  }
-
-  static TypeMirror getTypeMirror(Class<?> clazz, Elements elements) {
-    return getTypeMirror(clazz.getCanonicalName(), elements);
-  }
-
-  static TypeMirror getTypeMirror(String canonicalName, Elements elements) {
-    try {
-      return elements.getTypeElement(canonicalName).asType();
-    } catch (MirroredTypeException mte) {
-      return mte.getTypeMirror();
-    }
-  }
-
-  static Element getElementByName(ClassName name, Elements elements, Types types) {
+  static TypeElement getElementByName(ClassName name, Elements elements, Types types) {
     String canonicalName = name.reflectionName().replace("$", ".");
-    return getElementByName(canonicalName, elements, types);
+    return (TypeElement) getElementByName(canonicalName, elements, types);
   }
 
   static Element getElementByName(String name, Elements elements, Types types) {
@@ -127,11 +107,11 @@ class Utils {
   }
 
   static boolean isViewClickListenerType(TypeMirror type) {
-    return isSubtypeOfType(type, VIEW_CLICK_LISTENER_TYPE);
+    return isType(type, VIEW_CLICK_LISTENER_TYPE);
   }
 
   static boolean isViewLongClickListenerType(TypeMirror type) {
-    return isSubtypeOfType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
+    return isType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {
@@ -266,7 +246,7 @@ class Utils {
       }
     }
 
-    TypeElement superClazz = (TypeElement) typeUtils.asElement(clazz.getSuperclass());
+    TypeElement superClazz = getParentClassElement(clazz, typeUtils);
     if (superClazz == null) {
       return null;
     }
@@ -287,7 +267,8 @@ class Utils {
       ParameterSpec param2 = params2.get(i);
 
       TypeMirror param1Type = types.erasure(param1.asType());
-      TypeMirror param2Type = types.erasure(getTypeMirror(param2.type.toString(), elements));
+      TypeMirror param2Type =
+          types.erasure(KotlinUtilsKt.getTypeMirror(param2.type.toString(), elements));
 
       // If a param is a type variable then we don't need an exact type match, it just needs to
       // be assignable
@@ -426,8 +407,12 @@ class Utils {
     return String.valueOf(string.charAt(3)).toLowerCase() + string.substring(4);
   }
 
+  static boolean isType(TypeMirror typeMirror, String otherType) {
+    return otherType.equals(typeMirror.toString());
+  }
+
   static boolean isType(Elements elements, Types types, TypeMirror typeMirror, Class<?> clazz) {
-    TypeMirror classType = getTypeMirror(clazz, elements);
+    TypeMirror classType = KotlinUtilsKt.getTypeMirror(clazz, elements);
     return types.isSameType(typeMirror, classType);
   }
 
@@ -442,8 +427,9 @@ class Utils {
   }
 
   @Nullable
-  static <T extends Annotation> TypeMirror getClassParamFromAnnotation(
-      Element annotatedElement, Class<T> annotationClass, String paramName) {
+  static <T extends Annotation> ClassName getClassParamFromAnnotation(
+      Element annotatedElement, Class<T> annotationClass, String paramName,
+      Types typeUtils) {
     AnnotationMirror am = getAnnotationMirror(annotatedElement, annotationClass);
     if (am == null) {
       return null;
@@ -454,7 +440,7 @@ class Utils {
     } else {
       Object value = av.getValue();
       if (value instanceof TypeMirror) {
-        return (TypeMirror) value;
+        return ClassName.get((TypeElement) typeUtils.asElement((TypeMirror) value));
       }
       // Couldn't resolve R class
       return null;
